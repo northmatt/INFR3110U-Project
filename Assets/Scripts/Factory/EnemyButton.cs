@@ -7,7 +7,7 @@ using TMPro;
 public class EnemyButton : MonoBehaviour {
     private EnemyFactory factory;
 
-    private EditorManager editor;
+    private EditorController editor;
 
     TextMeshProUGUI btnText;
 
@@ -15,7 +15,7 @@ public class EnemyButton : MonoBehaviour {
 
     private void Start()  {
         factory = GameController.instance.gameObject.GetComponent<EnemyFactory>();
-        editor = EditorManager.instance;
+        editor = EditorController.instance;
 
         btnText = GetComponentInChildren<TextMeshProUGUI>();
     }    

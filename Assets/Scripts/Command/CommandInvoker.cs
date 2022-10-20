@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CommandInvoker : MonoBehaviour {
-    PlayerAction inputAction;
-
     static Queue<ICommand> commandBuffer = new Queue<ICommand>();
     static List<ICommand> commandHistory = new List<ICommand>();
-
     static int counter = 0;
+
+    private PlayerAction inputAction;
 
     private void Start() {
         inputAction = GameController.instance.inputAction;

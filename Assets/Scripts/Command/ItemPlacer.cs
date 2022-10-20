@@ -5,11 +5,11 @@ using UnityEngine;
 public class ItemPlacer : MonoBehaviour {
     public static GameObject PlaceItem(GameObject item, Vector3? position = null) {
         if (position == null) {
-            EditorManager.instance.instantiatedPrefab = Instantiate(item);
-            return EditorManager.instance.instantiatedPrefab;
+            EditorController.instance.instantiatedPrefab = Instantiate(item, EditorController.instance.instantiateParent);
+            return EditorController.instance.instantiatedPrefab;
         }
 
-        return Instantiate(item, (Vector3)position, Quaternion.identity);
+        return Instantiate(item, (Vector3)position, Quaternion.identity, EditorController.instance.instantiateParent);
     }
 
     public static void RemoveItem(GameObject item) {

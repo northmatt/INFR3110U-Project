@@ -10,20 +10,128 @@ public class EnemyController : MonoBehaviour {
     public float sightDistance;
     public float FieldOfView;
     public float agroTime;
-    public float health;
+    public byte health;
     public AudioClip[] noises;
     [HideInInspector] public Animator anim;
     [HideInInspector] public bool isAttacking;
 
-    private NavMeshAgent agent;
     private AudioSource aS;
+    private ParticleSystem pS;
+    private NavMeshAgent agent;
     private Transform enemyHead;
     private LayerMask enemyLayerIgnore;
-    private ParticleSystem pS;
     private bool playerInSight;
+    private bool isMoving;
     private float navUpdateTime;
     private float agro;
-    private bool isMoving;
+
+    private void Start() {
+        agent = GetComponent<NavMeshAgent>();
+        anim = transform.GetChild(0).GetComponent<Animator>();
+        aS = GetComponent<AudioSource>();
+
+        enemyLayerIgnore = ~(1 << LayerMask.NameToLayer("Enemy"));
+
+        //makes a list of all the children (or child in child, child in child in child, ect)
+        Transform[] children = transform.GetComponentsInChildren<Transform>();
+        foreach (Transform child in children) {
+            if (child.gameObject.name == "Head")
+                enemyHead = child;
+
+            if (child.gameObject.name == "Particle Effects")
+                pS = child.GetComponent<ParticleSystem>();
+        }
+
+        Rigidbody[] rbs = transform.GetComponentsInChildren<Rigidbody>();
+        foreach(Rigidbody rb3d in rbs)
+            rb3d.isKinematic = true;
+    }
+
+    private void FixedUpdate() {
+        //Bad code cuz EnemyController Start() is after GameController Start()
+        if (player == null) {
+            player = GameController.instance.player;
+            return;
+        }
+        //ParticleSystem.MainModule tempMain = pS.main;
+
+        //If enemy has died then remove unneeded components and turn the enmy into a ragdoll
+        if (health == 0) {
+            //tempMain.loop = false;
+
+            //Destroy(pS, 5);
+            Destroy(anim);
+            Destroy(agent);
+            Destroy(GetComponent<CapsuleCollider>());
+
+            Rigidbody[] rbs = transform.GetComponentsInChildren<Rigidbody>();
+            foreach (Rigidbody rb3d in rbs)
+                rb3d.isKinematic = false;
+
+            Destroy(this);
+
+            return;
+        }
+
+        LookForPlayer();
+
+        if (!aS.isPlaying)
+            PlayNoise();
+
+        //particles fade depending on the distance of the player
+        /*ParticleSystem.MinMaxGradient tempGradient = tempMain.startColor;
+        Color tempColor = tempGradient.color;
+        tempColor.a = Mathf.Clamp(1 - (Vector3.Distance(transform.position, player.transform.position) / 25), 0, 1);
+        tempGradient.color = tempColor;
+        tempMain.startColor = tempGradient;*/
+
+        isMoving = (agent.velocity != Vector3.zero);
+
+        anim.SetBool("isWalking", isMoving);
+        anim.SetBool("isAttacking", false);
+
+        isAttacking = anim.GetCurrentAnimatorStateInfo(0).IsName("Enemy Attack");
+
+        //enemy cannot move while attacking
+        agent.enabled = !isAttacking;
+
+        //if the player is far away then only update the nav dest every five seconds
+        if (Vector3.Distance(player.transform.position, transform.position) >= minAccurateDist) {
+            if (navUpdateTime <= 0f) {
+                changeNavDest(player.transform.position, minAccurateDist - 1f);
+                navUpdateTime = 5f;
+            }
+
+            navUpdateTime -= Time.fixedDeltaTime;
+
+            return;
+        }
+
+        //if the enemy is targeting a player then go directly to it's position
+        //if it's close then attack and always look at the player
+        if (agro >= 1) {
+            if (Vector3.Distance(transform.position, player.transform.position) <= agent.stoppingDistance && playerInSight || isAttacking) {
+                Vector3 tempVector = player.transform.position - transform.position;
+                tempVector.y = 0;
+                transform.rotation = Quaternion.LookRotation(tempVector);
+            }
+
+            if (Vector3.Distance(transform.position, player.transform.position) <= agent.stoppingDistance && playerInSight) {
+                anim.SetBool("isAttacking", true);
+                return;
+            }
+
+            changeNavDest(player.transform.position);
+
+            agro -= Time.fixedDeltaTime;
+
+            return;
+        }
+
+        //if the enemy is neither targeting the player or far away then change the dest just before it reaches it's destination
+        if (Vector3.Distance(transform.position, agent.destination) <= agent.stoppingDistance + 1)
+            changeNavDest(player.transform.position, minAccurateDist - 1);
+    }
 
     //changes the nav dest to the given posision and will offset the distance randomly if a max offset distance is given
     void changeNavDest(Vector3 pos, float offsetDist = 0) {
@@ -85,7 +193,8 @@ public class EnemyController : MonoBehaviour {
     }
 
     private void PlayNoise() {
-        return;
+        if (noises.Length == 0)
+            return;
 
         // pick & play a random enemy sound from the array,
         // excluding sound at index 0
@@ -95,116 +204,5 @@ public class EnemyController : MonoBehaviour {
         // move picked sound to index 0 so it's not picked next time
         noises[n] = noises[0];
         noises[0] = aS.clip;
-    }
-
-    private void Start() {
-        agent = GetComponent<NavMeshAgent>();
-        anim = transform.GetChild(0).GetComponent<Animator>();
-        aS = GetComponent<AudioSource>();
-
-        enemyLayerIgnore = ~(1 << LayerMask.NameToLayer("Enemy"));
-
-        //makes a list of all the children (or child in child, child in child in child, ect)
-        Transform[] children = transform.GetComponentsInChildren<Transform>();
-        foreach (Transform child in children) {
-            if (child.gameObject.name == "Head")
-                enemyHead = child;
-
-            if (child.gameObject.name == "Particle Effects")
-                pS = child.GetComponent<ParticleSystem>();
-        }
-
-        Rigidbody[] rbs = transform.GetComponentsInChildren<Rigidbody>();
-        foreach(Rigidbody rb3d in rbs)
-            rb3d.isKinematic = true;
-    }
-
-    private void FixedUpdate() {
-        //Bad code cuz EnemyController Start() is after GameController Start()
-        if (player == null) {
-            player = GameController.instance.player;
-            return;
-        }
-        //ParticleSystem.MainModule tempMain = pS.main;
-
-        //If enemy has died then remove unneeded components and turn the enmy into a ragdoll
-        if (!(health > 0)) {
-            //tempMain.loop = false;
-
-            //Destroy(pS, 5);
-            Destroy(anim);
-            Destroy(agent);
-            Destroy(GetComponent<CapsuleCollider>());
-
-            Rigidbody[] rbs = transform.GetComponentsInChildren<Rigidbody>();
-            foreach (Rigidbody rb3d in rbs)
-                rb3d.isKinematic = false;
-
-            Destroy(this);
-
-            return;
-        }
-
-        LookForPlayer();
-
-        if (!aS.isPlaying)
-            PlayNoise();
-
-        //particles fade depending on the distance of the player
-        /*ParticleSystem.MinMaxGradient tempGradient = tempMain.startColor;
-        Color tempColor = tempGradient.color;
-        tempColor.a = Mathf.Clamp(1 - (Vector3.Distance(transform.position, player.transform.position) / 25), 0, 1);
-        tempGradient.color = tempColor;
-        tempMain.startColor = tempGradient;*/
-
-        if (agent.velocity == Vector3.zero)
-            isMoving = false;
-        else
-            isMoving = true;
-
-        anim.SetBool("isWalking", isMoving);
-        anim.SetBool("isAttacking", false);
-
-        isAttacking = anim.GetCurrentAnimatorStateInfo(0).IsName("Zombie Attack");
-
-        //enemy cannot move while attacking
-        agent.enabled = !isAttacking;
-
-        //if the player is far away then only update the nav dest every five seconds
-        if (Vector3.Distance(player.transform.position, transform.position) >= minAccurateDist) {
-            if (navUpdateTime <= 0) {
-                changeNavDest(player.transform.position, minAccurateDist - 1);
-                navUpdateTime = 5;
-            }
-
-            navUpdateTime -= Time.fixedDeltaTime;
-
-            return;
-        }
-
-        //if the enemy is targeting a player then go directly to it's position
-        //if it's close then attack and always look at the player
-        if (agro >= 1) {
-            if (Vector3.Distance(transform.position, player.transform.position) <= agent.stoppingDistance && playerInSight || isAttacking) {
-                Vector3 tempVector = player.transform.position - transform.position;
-                tempVector.y = 0;
-                transform.rotation = Quaternion.LookRotation(tempVector);
-            }
-
-            if (Vector3.Distance(transform.position, player.transform.position) <= agent.stoppingDistance && playerInSight) {
-                anim.SetBool("isAttacking", true);
-                return;
-            }
-
-            changeNavDest(player.transform.position);
-
-            agro -= Time.fixedDeltaTime;
-
-            return;
-        }
-
-        //if the enemy is neither targeting the player or far away then change the dest just before it reaches it's destination
-        if (Vector3.Distance(transform.position, agent.destination) <= agent.stoppingDistance + 1)
-            changeNavDest(player.transform.position, minAccurateDist - 1);
     }
 }

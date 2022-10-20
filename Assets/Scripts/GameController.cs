@@ -56,7 +56,7 @@ public class GameController : MonoBehaviour {
     }
 
     void TogglePauseMenu() {
-        if (EditorManager.instance.editorMode)
+        if (EditorController.instance.editorMode)
             return;
 
         DoPause(!gamePaused);

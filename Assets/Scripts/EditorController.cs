@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class EditorManager : MonoBehaviour {
-    public static EditorManager instance;
+public class EditorController : MonoBehaviour {
+    public static EditorController instance;
 
     public PlayerAction inputAction;
 
     public Camera mainCam;
     public Camera editorCam;
     public GameObject[] editorPrefabs;
+    public Transform instantiateParent = null;
     public GameObject instantiatedPrefab = null;
     public bool editorMode = false;
     public float editorMovement = 0f;
@@ -43,11 +44,18 @@ public class EditorManager : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         if (instantiatedPrefab != null) {
-            //Pretty sure there is a better built in way to read mouse pos, maybe not cant remember
-            mousePos = Mouse.current.position.ReadValue();
-            mousePos = new Vector3(mousePos.x, mousePos.y, 5f);
+            Ray camRay = editorCam.ScreenPointToRay(Mouse.current.position.ReadValue());
+            RaycastHit rayHit;
 
-            instantiatedPrefab.transform.position = editorCam.ScreenToWorldPoint(mousePos);
+            if (Physics.Raycast(camRay, out rayHit)) {
+                mousePos = rayHit.point;
+            }
+            else {
+                mousePos = Mouse.current.position.ReadValue();
+                mousePos = editorCam.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, 5f));
+            }
+
+            instantiatedPrefab.transform.position = mousePos;
         }
 
         editorCam.transform.position += Time.unscaledDeltaTime * editorMovement * inputAction.Editor.Move.ReadValue<Vector3>();
@@ -82,10 +90,8 @@ public class EditorManager : MonoBehaviour {
     }
 
     public void DropItem() {
-        if (editorMode && instantiatedPrefab != null) {
-            instantiatedPrefab.GetComponent<Collider>().enabled = true;
+        if (editorMode && instantiatedPrefab != null)
             instantiatedPrefab = null;
-        }
     }
 
 }

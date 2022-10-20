@@ -6,6 +6,7 @@ public class CharController : MonoBehaviour {
     public float moveForce = 0f;
     public float moveForceSprintMultiplier = 0f;
     public float jumpForce = 0f;
+    public float crouchSize = 0f;
     public float groundedDot = 0.7f;
     public float gravMult = 1f;
 
@@ -14,11 +15,13 @@ public class CharController : MonoBehaviour {
 
     private PlayerAction playerInput;
     private Rigidbody rBody;
+    private Collider coll;
     private List<GameObject> groundedObjects = new List<GameObject>();
     private Vector2 inputs = Vector2.zero;
     private byte jump = 0;
     private bool grounded = false;
     private bool sprint = false;
+    private bool crouch = false;
 
     private void Start() {
         playerInput = GameController.instance.inputAction;
@@ -31,9 +34,12 @@ public class CharController : MonoBehaviour {
         playerInput.Player.Sprint.performed += cntxt => sprint = true;
         playerInput.Player.Sprint.canceled += cntxt => sprint = false;
 
+        playerInput.Player.Crouch.performed += cntxt => ToggleCrouch();
+
         //playerInput.Player.Shoot.performed += cntxt => Shoot();
 
         rBody = GetComponent<Rigidbody>();
+        coll = GetComponent<Collider>();
     }
 
     private void FixedUpdate() {
@@ -101,10 +107,23 @@ public class CharController : MonoBehaviour {
     }
 
     private void Shoot() {
-        if (EditorManager.instance.editorMode)
+        if (EditorController.instance.editorMode)
             return;
 
         Rigidbody bulletRb = Instantiate(projectile, projectilePos.transform.position, Quaternion.identity).GetComponent<Rigidbody>();
         bulletRb.AddForce(transform.forward * 32f + transform.up * 1f, ForceMode.Impulse);
+    }
+
+    //Should prolly have an FSM at this point, crouchSize should be done by anim
+    private void ToggleCrouch() {
+        Vector3 startCheck = transform.position - (coll.bounds.extents.y - coll.bounds.extents.z - 0.02f) * Vector3.up;
+        Vector3 endCheck = transform.position + (coll.bounds.size.y / crouchSize - coll.bounds.size.z) * Vector3.up;
+        if (crouch && Physics.CheckCapsule(startCheck, endCheck, coll.bounds.extents.z, ~(1 << LayerMask.NameToLayer("Player")), QueryTriggerInteraction.Ignore))
+            return;
+
+        crouch = !crouch;
+
+        transform.localScale = new Vector3(1f, crouch ? crouchSize : 1f, 1f);
+        transform.position -= new Vector3(0f, crouch ? coll.bounds.size.y * crouchSize * 0.5f : coll.bounds.size.y * crouchSize * -0.5f, 0f);
     }
 }
