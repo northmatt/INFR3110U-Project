@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Runtime.InteropServices;
 
-public class NativePlugin : MonoBehaviour {
+public class NativePlugin : MonoBehaviour 
+{
     [DllImport("NativePlugin")]
     private static extern int GetID();
 
@@ -31,7 +32,8 @@ public class NativePlugin : MonoBehaviour {
     string fn;
 
     // Start is called before the first frame update
-    void Start() {
+    void Start()  
+    {
         inputAction = GameController.instance.playerInput;
 
         inputAction.Editor.Save.performed += cntxt => SaveItems();
@@ -41,13 +43,17 @@ public class NativePlugin : MonoBehaviour {
         Debug.Log(fn);    
     }
 
-    void SaveItems() {
+    void SaveItems() 
+    {
         StartWriting(fn);
-        foreach(GameObject obj in GameObject.FindGameObjectsWithTag("SpikeBall")) {
-            if(obj.name.Contains("SpikeBall1")) {
+        foreach(GameObject obj in GameObject.FindGameObjectsWithTag("SpikeBall")) 
+        {
+            if(obj.name.Contains("SpikeBall1")) 
+            {
                 SaveToFile(1, obj.transform.position.x, obj.transform.position.y, obj.transform.position.z);
             }
-            else {
+            else 
+            {
                 SaveToFile(2, obj.transform.position.x, obj.transform.position.y, obj.transform.position.z);
             }
         }

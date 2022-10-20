@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class EditorManager : MonoBehaviour {
+public class EditorManager : MonoBehaviour 
+{
     public static EditorManager instance;
 
     public PlayerAction inputAction;
@@ -26,7 +27,8 @@ public class EditorManager : MonoBehaviour {
     ICommand command;
 
     // Start is called before the first frame update
-    void Start() {
+    void Start() 
+    {
         if (instance != null) {
             Destroy(this.gameObject);
             return;
@@ -47,8 +49,10 @@ public class EditorManager : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update() {
-        if (instantiated) {
+    void Update() 
+    {
+        if (instantiated)
+        {
             //Pretty sure there is a better built in way to read mouse pos, maybe not cant remember
             mousePos = Mouse.current.position.ReadValue();
             mousePos = new Vector3(mousePos.x, mousePos.y, 5f);
@@ -57,7 +61,8 @@ public class EditorManager : MonoBehaviour {
         }
     }
 
-    public void ToggleEditorMode() {
+    public void ToggleEditorMode()
+    {
         if (editorMode != GameController.instance.gamePaused)
             return;
 
@@ -70,9 +75,12 @@ public class EditorManager : MonoBehaviour {
         GameController.instance.DoPause(editorMode);
     }
 
-    public void AddItem(int itemId) {
-        if (editorMode && !instantiated) {
-            switch (itemId) {
+    public void AddItem(int itemId)
+    {
+        if (editorMode && !instantiated) 
+        {
+            switch (itemId)
+            {
                 case 1:
                     item = Instantiate(prefab1);
                     //Create boxes that can observe events and give them an event to do
@@ -95,7 +103,8 @@ public class EditorManager : MonoBehaviour {
         }
     }
 
-    public void DropItem() {
+    public void DropItem() 
+    {
         if (editorMode && instantiated) {
             item.GetComponent<Rigidbody>().useGravity = true;
             item.GetComponent<Collider>().enabled = true;

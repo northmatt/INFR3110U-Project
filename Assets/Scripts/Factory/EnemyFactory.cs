@@ -6,7 +6,8 @@ using System.Reflection;
 using System;
 using TMPro;
 
-public class EnemyFactory : MonoBehaviour {
+public class EnemyFactory : MonoBehaviour 
+{
     public GameObject enemy1Prefab;
     public GameObject enemy2Prefab;
 
@@ -16,7 +17,8 @@ public class EnemyFactory : MonoBehaviour {
     List<Enemy> enemies;
     
     // Start is called before the first frame update
-    void Start() {
+    void Start() 
+    {
         var enemyTypes = Assembly.GetAssembly(typeof(Enemy)).GetTypes().Where(myType => myType.IsClass && !myType.IsAbstract && myType.IsSubclassOf(typeof(Enemy)));
         enemies = new List<Enemy>();
 
@@ -28,9 +30,12 @@ public class EnemyFactory : MonoBehaviour {
         ButtonPanel();
     }
 
-    public Enemy GetEnemy(string enemyType) {
-        foreach(Enemy enemy in enemies) {
-            if(enemy.Name == enemyType) {
+    public Enemy GetEnemy(string enemyType) 
+    {
+        foreach(Enemy enemy in enemies) 
+        {
+            if(enemy.Name == enemyType) 
+            {
                 Debug.Log("enemy found");
                 var target = Activator.CreateInstance(enemy.GetType()) as Enemy;
 
@@ -41,8 +46,10 @@ public class EnemyFactory : MonoBehaviour {
         return null;
     }
 
-    public void ButtonPanel() {
-        foreach(Enemy enemy in enemies) {
+    public void ButtonPanel() 
+    {
+        foreach(Enemy enemy in enemies) 
+        {
             var button = Instantiate(buttonPrefab);
             button.transform.SetParent(buttonPanel.transform);
             button.gameObject.name = enemy.Name + " Button";

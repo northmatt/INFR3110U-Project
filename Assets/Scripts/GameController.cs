@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameController : MonoBehaviour {
+public class GameController : MonoBehaviour 
+{
     public static GameController instance;
 
     public PlayerAction playerInput;
@@ -12,17 +13,21 @@ public class GameController : MonoBehaviour {
     public bool CursorLocked = false;
     public byte collectables = 0;
 
-    private void OnEnable() {
+    private void OnEnable() 
+    {
         playerInput.Enable();
     }
 
-    private void OnDisable() {
+    private void OnDisable() 
+    {
         playerInput.Disable();
     }
 
-    private void Awake() {
+    private void Awake() 
+    {
         //Not ideal to init singleton in Awake(), but needs to run before any script runs Start()
-        if (instance != null) {
+        if (instance != null) 
+        {
             Destroy(this.gameObject);
             return;
         }
@@ -31,7 +36,8 @@ public class GameController : MonoBehaviour {
         playerInput = new PlayerAction();
     }
 
-    private void Start() {
+    private void Start() 
+    {
         //Need to make it find player on scene reload, also cameras on EditorManager (wrote this weeks ago but idk why I need to do EditorManager given it reloads with scene, should look into it more)
         //DontDestroyOnLoad(this.gameObject);
 
@@ -42,20 +48,23 @@ public class GameController : MonoBehaviour {
         playerInput.Player.Menu.performed += cntxt => TogglePauseMenu();
     }
 
-    public void DoPause(bool isPaused) {
+    public void DoPause(bool isPaused) 
+    {
         gamePaused = isPaused;
         CursorHidden(!gamePaused);
 
         Time.timeScale = isPaused ? 0 : 1;
     }
 
-    void CursorHidden(bool isHidden) {
+    void CursorHidden(bool isHidden)
+    {
         CursorLocked = isHidden;
         Cursor.lockState = CursorLocked ? CursorLockMode.Locked : CursorLockMode.None;
         Cursor.visible = !CursorLocked;
     }
 
-    void TogglePauseMenu() {
+    void TogglePauseMenu() 
+    {
         if (EditorManager.instance.editorMode)
             return;
 

@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CommandInvoker : MonoBehaviour {
+public class CommandInvoker : MonoBehaviour 
+{
     PlayerAction inputAction;
 
     static Queue<ICommand> commandBuffer = new Queue<ICommand>();
@@ -10,15 +11,18 @@ public class CommandInvoker : MonoBehaviour {
 
     static int counter = 0;
 
-    private void Start() {
+    private void Start() 
+    {
         inputAction = GameController.instance.playerInput;
 
         inputAction.Editor.Undo.performed += cntxt => UndoCommand();
         inputAction.Editor.Redo.performed += cntxt => RedoCommand();
     }
-
-    private void Update() {
-        if (commandBuffer.Count > 0) {
+     
+    private void Update() 
+    {
+        if (commandBuffer.Count > 0) 
+        {
             ICommand e = commandBuffer.Dequeue();
             e.Execute();
 
@@ -28,7 +32,8 @@ public class CommandInvoker : MonoBehaviour {
         }
     }
 
-    public static void AddCommand(ICommand command) {
+    public static void AddCommand(ICommand command) 
+    {
         //If there are future actions in the history, remove them
         while (commandHistory.Count > counter)
             commandHistory.RemoveAt(counter);
@@ -36,7 +41,8 @@ public class CommandInvoker : MonoBehaviour {
         commandBuffer.Enqueue(command);
     }
 
-    public static void UndoCommand() {
+    public static void UndoCommand() 
+    {
         if (commandBuffer.Count > 0 || counter <= 0)
             return;
 
@@ -44,7 +50,8 @@ public class CommandInvoker : MonoBehaviour {
         commandHistory[counter].Undo();
     }
 
-    public void RedoCommand() {
+    public void RedoCommand() 
+    {
         if (commandBuffer.Count > 0 || counter >= commandHistory.Count)
             return;
 

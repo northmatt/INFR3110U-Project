@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class EnemyButton : MonoBehaviour {
+public class EnemyButton : MonoBehaviour 
+{
     private EnemyFactory factory;
 
     private EditorManager editor;
@@ -13,15 +14,18 @@ public class EnemyButton : MonoBehaviour {
 
     GameObject enemy;
 
-    private void Start()  {
+    private void Start()  
+    {
         factory = GameController.instance.gameObject.GetComponent<EnemyFactory>();
         editor = EditorManager.instance;
 
         btnText = GetComponentInChildren<TextMeshProUGUI>();
     }    
 
-    public void OnClickSpawn() {
-        switch(btnText.text) {
+    public void OnClickSpawn()
+    {
+        switch(btnText.text)
+        {
             case "crab":
                 editor.item = factory.GetEnemy("crab").Create(factory.enemy1Prefab);
                 break;
