@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CharController : MonoBehaviour {
     public float moveForce = 0f;
+    public float moveForceSprintMultiplier = 0f;
     public float jumpForce = 0f;
     public float groundedDot = 0.7f;
     public float gravMult = 1f;
@@ -17,14 +18,18 @@ public class CharController : MonoBehaviour {
     private Vector2 inputs = Vector2.zero;
     private byte jump = 0;
     private bool grounded = false;
+    private bool sprint = false;
 
     private void Start() {
-        playerInput = GameController.instance.playerInput;
+        playerInput = GameController.instance.inputAction;
 
         playerInput.Player.Move.performed += cntxt => inputs = cntxt.ReadValue<Vector2>();
         playerInput.Player.Move.canceled += cntxt => inputs = Vector2.zero;
 
         playerInput.Player.Jump.performed += cntxt => TryJump();
+
+        playerInput.Player.Sprint.performed += cntxt => sprint = true;
+        playerInput.Player.Sprint.canceled += cntxt => sprint = false;
 
         //playerInput.Player.Shoot.performed += cntxt => Shoot();
 
@@ -34,7 +39,8 @@ public class CharController : MonoBehaviour {
     private void FixedUpdate() {
         grounded = groundedObjects.Count > 0;
 
-        rBody.AddForce(moveForce * Time.fixedDeltaTime * inputs.x * transform.right + moveForce * Time.fixedDeltaTime * inputs.y * transform.forward);
+        float currentMoveForce = Time.fixedDeltaTime * moveForce * (sprint ? moveForceSprintMultiplier : 1f);
+        rBody.AddForce(currentMoveForce * inputs.x * transform.right + currentMoveForce * inputs.y * transform.forward);
 
         if (jump == 4) {
             rBody.AddForce(0f, jumpForce, 0f, ForceMode.VelocityChange);

@@ -3,23 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlaceItemCommand : ICommand {
+    GameObject objectReference;
+    GameObject prefabReference;
     Vector3 position;
-    Transform item;
 
-    public PlaceItemCommand(Vector3 _position, Transform _item) {
-        this.position = _position;
-        this.item = _item;
+    public PlaceItemCommand(GameObject _prefabReference) {
+        this.prefabReference = _prefabReference;
     }
 
     public void Execute() {
-        ItemPlacer.PlaceItem(item);
+        objectReference = ItemPlacer.PlaceItem(prefabReference);
     }
 
     public void Undo() {
-        ItemPlacer.RemoveItem(position);
+        this.position = objectReference.transform.position;
+        ItemPlacer.RemoveItem(objectReference);
     }
 
     public void Redo() {
-        ItemPlacer.RedoItem(position, item);
+        objectReference = ItemPlacer.PlaceItem(prefabReference, position);
     }
 }

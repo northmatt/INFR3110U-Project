@@ -11,7 +11,7 @@ public class CommandInvoker : MonoBehaviour {
     static int counter = 0;
 
     private void Start() {
-        inputAction = GameController.instance.playerInput;
+        inputAction = GameController.instance.inputAction;
 
         inputAction.Editor.Undo.performed += cntxt => UndoCommand();
         inputAction.Editor.Redo.performed += cntxt => RedoCommand();
@@ -24,7 +24,6 @@ public class CommandInvoker : MonoBehaviour {
 
             commandHistory.Add(e);
             ++counter;
-            Debug.Log("Command History: " + commandHistory.Count);
         }
     }
 

@@ -46,6 +46,15 @@ public partial class @PlayerAction : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Sprint"",
+                    ""type"": ""Button"",
+                    ""id"": ""e99dad42-757f-4370-ad15-23cc0647662a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Look"",
                     ""type"": ""Value"",
                     ""id"": ""c37ef7b3-83b6-48ae-b04f-5a2df84979f6"",
@@ -67,6 +76,15 @@ public partial class @PlayerAction : IInputActionCollection2, IDisposable
                     ""name"": ""Menu"",
                     ""type"": ""Button"",
                     ""id"": ""4d4400b3-6901-475a-aaaf-09c616a950fc"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""EditorMode"",
+                    ""type"": ""Button"",
+                    ""id"": ""be192a77-5a44-42dd-a96f-c44694191d4d"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -164,6 +182,17 @@ public partial class @PlayerAction : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""2f7c8d4a-9530-4b18-a6d0-fdaf65c3d3b6"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Shoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""32d1563b-a2c3-40ad-91eb-4208536c0b20"",
                     ""path"": ""<Gamepad>/leftStick"",
                     ""interactions"": """",
@@ -203,6 +232,50 @@ public partial class @PlayerAction : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Menu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2ebfca85-dc8c-478a-95d5-746d4c21217b"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Menu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2bba9437-7965-41b0-a7c5-4d6b6f6cecbe"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Sprint"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""86a7a658-9b6f-450c-a7c8-3f3b02f8c1c9"",
+                    ""path"": ""<Gamepad>/leftStick/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Sprint"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2ecb55fe-0440-417d-a288-ec20a60f6700"",
+                    ""path"": ""<Keyboard>/backquote"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""EditorMode"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -274,13 +347,22 @@ public partial class @PlayerAction : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Move"",
+                    ""type"": ""Value"",
+                    ""id"": ""7fe47f42-2b8d-473e-97ae-5c5f1b528d02"",
+                    ""expectedControlType"": ""Vector3"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
                 {
                     ""name"": """",
                     ""id"": ""246314dc-f11d-4c2b-8d29-d09663c996ba"",
-                    ""path"": ""<Keyboard>/e"",
+                    ""path"": ""<Keyboard>/backquote"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -353,6 +435,83 @@ public partial class @PlayerAction : IInputActionCollection2, IDisposable
                     ""action"": ""Save"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""3D Vector"",
+                    ""id"": ""5425ae5e-60d4-44f5-97ad-db511a49b450"",
+                    ""path"": ""3DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""f29bacfb-a5a7-405f-91dd-e48b99c35dbc"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""651288a8-3d86-4776-8c43-6a95ed91e159"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""ebc287a5-028b-4e00-92af-a80345bbf283"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""bf2c63da-e5e1-499a-9379-c5db71343926"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""forward"",
+                    ""id"": ""9d3949ab-f84a-46bc-a922-b1787229c727"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""backward"",
+                    ""id"": ""64674477-030f-4ab1-994a-c35e3063c795"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -363,9 +522,11 @@ public partial class @PlayerAction : IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
+        m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
         m_Player_Shoot = m_Player.FindAction("Shoot", throwIfNotFound: true);
         m_Player_Menu = m_Player.FindAction("Menu", throwIfNotFound: true);
+        m_Player_EditorMode = m_Player.FindAction("EditorMode", throwIfNotFound: true);
         // Editor
         m_Editor = asset.FindActionMap("Editor", throwIfNotFound: true);
         m_Editor_EditorMode = m_Editor.FindAction("EditorMode", throwIfNotFound: true);
@@ -375,6 +536,7 @@ public partial class @PlayerAction : IInputActionCollection2, IDisposable
         m_Editor_Undo = m_Editor.FindAction("Undo", throwIfNotFound: true);
         m_Editor_Redo = m_Editor.FindAction("Redo", throwIfNotFound: true);
         m_Editor_Save = m_Editor.FindAction("Save", throwIfNotFound: true);
+        m_Editor_Move = m_Editor.FindAction("Move", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -436,18 +598,22 @@ public partial class @PlayerAction : IInputActionCollection2, IDisposable
     private IPlayerActions m_PlayerActionsCallbackInterface;
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Jump;
+    private readonly InputAction m_Player_Sprint;
     private readonly InputAction m_Player_Look;
     private readonly InputAction m_Player_Shoot;
     private readonly InputAction m_Player_Menu;
+    private readonly InputAction m_Player_EditorMode;
     public struct PlayerActions
     {
         private @PlayerAction m_Wrapper;
         public PlayerActions(@PlayerAction wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
+        public InputAction @Sprint => m_Wrapper.m_Player_Sprint;
         public InputAction @Look => m_Wrapper.m_Player_Look;
         public InputAction @Shoot => m_Wrapper.m_Player_Shoot;
         public InputAction @Menu => m_Wrapper.m_Player_Menu;
+        public InputAction @EditorMode => m_Wrapper.m_Player_EditorMode;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -463,6 +629,9 @@ public partial class @PlayerAction : IInputActionCollection2, IDisposable
                 @Jump.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
+                @Sprint.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSprint;
+                @Sprint.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSprint;
+                @Sprint.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSprint;
                 @Look.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLook;
                 @Look.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLook;
                 @Look.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLook;
@@ -472,6 +641,9 @@ public partial class @PlayerAction : IInputActionCollection2, IDisposable
                 @Menu.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMenu;
                 @Menu.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMenu;
                 @Menu.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMenu;
+                @EditorMode.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEditorMode;
+                @EditorMode.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEditorMode;
+                @EditorMode.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEditorMode;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -482,6 +654,9 @@ public partial class @PlayerAction : IInputActionCollection2, IDisposable
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
+                @Sprint.started += instance.OnSprint;
+                @Sprint.performed += instance.OnSprint;
+                @Sprint.canceled += instance.OnSprint;
                 @Look.started += instance.OnLook;
                 @Look.performed += instance.OnLook;
                 @Look.canceled += instance.OnLook;
@@ -491,6 +666,9 @@ public partial class @PlayerAction : IInputActionCollection2, IDisposable
                 @Menu.started += instance.OnMenu;
                 @Menu.performed += instance.OnMenu;
                 @Menu.canceled += instance.OnMenu;
+                @EditorMode.started += instance.OnEditorMode;
+                @EditorMode.performed += instance.OnEditorMode;
+                @EditorMode.canceled += instance.OnEditorMode;
             }
         }
     }
@@ -506,6 +684,7 @@ public partial class @PlayerAction : IInputActionCollection2, IDisposable
     private readonly InputAction m_Editor_Undo;
     private readonly InputAction m_Editor_Redo;
     private readonly InputAction m_Editor_Save;
+    private readonly InputAction m_Editor_Move;
     public struct EditorActions
     {
         private @PlayerAction m_Wrapper;
@@ -517,6 +696,7 @@ public partial class @PlayerAction : IInputActionCollection2, IDisposable
         public InputAction @Undo => m_Wrapper.m_Editor_Undo;
         public InputAction @Redo => m_Wrapper.m_Editor_Redo;
         public InputAction @Save => m_Wrapper.m_Editor_Save;
+        public InputAction @Move => m_Wrapper.m_Editor_Move;
         public InputActionMap Get() { return m_Wrapper.m_Editor; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -547,6 +727,9 @@ public partial class @PlayerAction : IInputActionCollection2, IDisposable
                 @Save.started -= m_Wrapper.m_EditorActionsCallbackInterface.OnSave;
                 @Save.performed -= m_Wrapper.m_EditorActionsCallbackInterface.OnSave;
                 @Save.canceled -= m_Wrapper.m_EditorActionsCallbackInterface.OnSave;
+                @Move.started -= m_Wrapper.m_EditorActionsCallbackInterface.OnMove;
+                @Move.performed -= m_Wrapper.m_EditorActionsCallbackInterface.OnMove;
+                @Move.canceled -= m_Wrapper.m_EditorActionsCallbackInterface.OnMove;
             }
             m_Wrapper.m_EditorActionsCallbackInterface = instance;
             if (instance != null)
@@ -572,6 +755,9 @@ public partial class @PlayerAction : IInputActionCollection2, IDisposable
                 @Save.started += instance.OnSave;
                 @Save.performed += instance.OnSave;
                 @Save.canceled += instance.OnSave;
+                @Move.started += instance.OnMove;
+                @Move.performed += instance.OnMove;
+                @Move.canceled += instance.OnMove;
             }
         }
     }
@@ -580,9 +766,11 @@ public partial class @PlayerAction : IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
+        void OnSprint(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
         void OnShoot(InputAction.CallbackContext context);
         void OnMenu(InputAction.CallbackContext context);
+        void OnEditorMode(InputAction.CallbackContext context);
     }
     public interface IEditorActions
     {
@@ -593,5 +781,6 @@ public partial class @PlayerAction : IInputActionCollection2, IDisposable
         void OnUndo(InputAction.CallbackContext context);
         void OnRedo(InputAction.CallbackContext context);
         void OnSave(InputAction.CallbackContext context);
+        void OnMove(InputAction.CallbackContext context);
     }
 }

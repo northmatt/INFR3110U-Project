@@ -23,15 +23,13 @@ public class EnemyButton : MonoBehaviour {
     public void OnClickSpawn() {
         switch(btnText.text) {
             case "crab":
-                editor.item = factory.GetEnemy("crab").Create(factory.enemy1Prefab);
+                editor.instantiatedPrefab = factory.GetEnemy("crab").Create(factory.enemy1Prefab);
                 break;
             case "monster":
-                editor.item = factory.GetEnemy("monster").Create(factory.enemy2Prefab);
+                editor.instantiatedPrefab = factory.GetEnemy("monster").Create(factory.enemy2Prefab);
                 break;
             default:
                 break;
         }
-
-        editor.instantiated = true;
     }
 }

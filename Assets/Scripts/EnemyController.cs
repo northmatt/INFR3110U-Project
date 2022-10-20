@@ -85,6 +85,8 @@ public class EnemyController : MonoBehaviour {
     }
 
     private void PlayNoise() {
+        return;
+
         // pick & play a random enemy sound from the array,
         // excluding sound at index 0
         int n = Random.Range(1, noises.Length);
@@ -118,13 +120,18 @@ public class EnemyController : MonoBehaviour {
     }
 
     private void FixedUpdate() {
-        ParticleSystem.MainModule tempMain = pS.main;
+        //Bad code cuz EnemyController Start() is after GameController Start()
+        if (player == null) {
+            player = GameController.instance.player;
+            return;
+        }
+        //ParticleSystem.MainModule tempMain = pS.main;
 
         //If enemy has died then remove unneeded components and turn the enmy into a ragdoll
         if (!(health > 0)) {
-            tempMain.loop = false;
+            //tempMain.loop = false;
 
-            Destroy(pS, 5);
+            //Destroy(pS, 5);
             Destroy(anim);
             Destroy(agent);
             Destroy(GetComponent<CapsuleCollider>());
@@ -144,11 +151,11 @@ public class EnemyController : MonoBehaviour {
             PlayNoise();
 
         //particles fade depending on the distance of the player
-        ParticleSystem.MinMaxGradient tempGradient = tempMain.startColor;
+        /*ParticleSystem.MinMaxGradient tempGradient = tempMain.startColor;
         Color tempColor = tempGradient.color;
         tempColor.a = Mathf.Clamp(1 - (Vector3.Distance(transform.position, player.transform.position) / 25), 0, 1);
         tempGradient.color = tempColor;
-        tempMain.startColor = tempGradient;
+        tempMain.startColor = tempGradient;*/
 
         if (agent.velocity == Vector3.zero)
             isMoving = false;

@@ -10,20 +10,12 @@ public class EditorManager : MonoBehaviour {
 
     public Camera mainCam;
     public Camera editorCam;
-
+    public GameObject[] editorPrefabs;
+    public GameObject instantiatedPrefab = null;
     public bool editorMode = false;
+    public float editorMovement = 0f;
 
-    Vector3 mousePos;
-    public GameObject prefab1;
-    public GameObject prefab2;
-    public GameObject item;
-    public bool instantiated = false;
-
-    // Will send notifications that something has happened to whoever is interested
-    Subject subject = new Subject();
-
-    // Command
-    ICommand command;
+    private Vector3 mousePos = Vector3.zero;
 
     // Start is called before the first frame update
     void Start() {
@@ -34,27 +26,31 @@ public class EditorManager : MonoBehaviour {
 
         instance = this;
 
-        inputAction = GameController.instance.playerInput;
+        inputAction = GameController.instance.inputAction;
 
+        inputAction.Player.EditorMode.performed += cntxt => ToggleEditorMode();
         inputAction.Editor.EditorMode.performed += cntxt => ToggleEditorMode();
-
-        inputAction.Editor.AddItem1.performed += cntxt => AddItem(1);
-        inputAction.Editor.AddItem2.performed += cntxt => AddItem(2);
+        inputAction.Editor.AddItem1.performed += cntxt => AddItem(0);
+        inputAction.Editor.AddItem2.performed += cntxt => AddItem(1);
         inputAction.Editor.DropItem.performed += cntxt => DropItem();
 
         mainCam.enabled = true;
         editorCam.enabled = false;
+
+        inputAction.Editor.Disable();
     }
 
     // Update is called once per frame
     void Update() {
-        if (instantiated) {
+        if (instantiatedPrefab != null) {
             //Pretty sure there is a better built in way to read mouse pos, maybe not cant remember
             mousePos = Mouse.current.position.ReadValue();
             mousePos = new Vector3(mousePos.x, mousePos.y, 5f);
 
-            item.transform.position = editorCam.ScreenToWorldPoint(mousePos);
+            instantiatedPrefab.transform.position = editorCam.ScreenToWorldPoint(mousePos);
         }
+
+        editorCam.transform.position += Time.unscaledDeltaTime * editorMovement * inputAction.Editor.Move.ReadValue<Vector3>();
     }
 
     public void ToggleEditorMode() {
@@ -66,45 +62,29 @@ public class EditorManager : MonoBehaviour {
         mainCam.enabled = !editorMode;
         editorCam.enabled = editorMode;
 
+        //Why cant I just do inputAction.Actionmap.Enabled(bool) hnnngggggg
+        if (editorMode) {
+            inputAction.Editor.Enable();
+            inputAction.Player.Disable();
+        }
+        else {
+            inputAction.Editor.Disable();
+            inputAction.Player.Enable();
+        }
+
         //GameController.instance.editorUI.enabled = editorMode;
         GameController.instance.DoPause(editorMode);
     }
 
     public void AddItem(int itemId) {
-        if (editorMode && !instantiated) {
-            switch (itemId) {
-                case 1:
-                    item = Instantiate(prefab1);
-                    //Create boxes that can observe events and give them an event to do
-                    SpikeBall spike1 = new SpikeBall(item, new GreenMat());
-                    //Add the boxes to the list of objects waiting for something to happen
-                    subject.AddObserver(spike1);
-                    break;
-                case 2:
-                    item = Instantiate(prefab2);
-                    //Create boxes that can observe events and give them an event to do
-                    SpikeBall spike2 = new SpikeBall(item, new YellowMat());
-                    //Add the boxes to the list of objects waiting for something to happen
-                    subject.AddObserver(spike2);
-                    break;
-                default:
-                    break;
-            }
-            subject.Notify();
-            instantiated = true;
-        }
+        if (editorMode && instantiatedPrefab == null)
+            CommandInvoker.AddCommand(new PlaceItemCommand(editorPrefabs[itemId]));
     }
 
     public void DropItem() {
-        if (editorMode && instantiated) {
-            item.GetComponent<Rigidbody>().useGravity = true;
-            item.GetComponent<Collider>().enabled = true;
-
-            // Add item transform to items list
-            command = new PlaceItemCommand(item.transform.position, item.transform);
-            CommandInvoker.AddCommand(command);
-
-            instantiated = false;
+        if (editorMode && instantiatedPrefab != null) {
+            instantiatedPrefab.GetComponent<Collider>().enabled = true;
+            instantiatedPrefab = null;
         }
     }
 

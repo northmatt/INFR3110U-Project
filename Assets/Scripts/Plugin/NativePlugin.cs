@@ -32,7 +32,7 @@ public class NativePlugin : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start() {
-        inputAction = GameController.instance.playerInput;
+        inputAction = GameController.instance.inputAction;
 
         inputAction.Editor.Save.performed += cntxt => SaveItems();
 
