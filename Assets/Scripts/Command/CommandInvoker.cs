@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CommandInvoker : MonoBehaviour {
-    PlayerAction inputAction;
-
     static Queue<ICommand> commandBuffer = new Queue<ICommand>();
     static List<ICommand> commandHistory = new List<ICommand>();
-
     static int counter = 0;
 
+    private PlayerAction inputAction;
+
     private void Start() {
-        inputAction = GameController.instance.playerInput;
+        inputAction = GameController.instance.inputAction;
 
         inputAction.Editor.Undo.performed += cntxt => UndoCommand();
         inputAction.Editor.Redo.performed += cntxt => RedoCommand();
@@ -24,7 +23,6 @@ public class CommandInvoker : MonoBehaviour {
 
             commandHistory.Add(e);
             ++counter;
-            Debug.Log("Command History: " + commandHistory.Count);
         }
     }
 

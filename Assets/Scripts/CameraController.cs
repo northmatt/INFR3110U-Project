@@ -11,7 +11,7 @@ public class CameraController : MonoBehaviour {
     public float sensitivity = 1f;
     public Vector2 rotXMinMax = new Vector2(310f, 450f);
 
-    private PlayerAction playerInput;
+    private PlayerAction inputAction;
     private Camera cam;
     private Vector2 rotationInput = Vector2.zero;
     private Vector3 orginOffsetWithRotationCurrent = Vector3.zero;
@@ -19,10 +19,10 @@ public class CameraController : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start() {
-        playerInput = GameController.instance.playerInput;
+        inputAction = GameController.instance.inputAction;
 
-        playerInput.Player.Look.performed += cntxt => rotationInput = cntxt.ReadValue<Vector2>();
-        playerInput.Player.Look.canceled += cntxt => rotationInput = Vector2.zero;
+        inputAction.Player.Look.performed += cntxt => rotationInput = cntxt.ReadValue<Vector2>();
+        inputAction.Player.Look.canceled += cntxt => rotationInput = Vector2.zero;
 
         cam = GetComponent<Camera>();
         orginOffsetWithRotationCurrent = transform.rotation * orginOffsetWithRotation;

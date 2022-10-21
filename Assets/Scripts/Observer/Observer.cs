@@ -7,28 +7,50 @@ public abstract class Observer {
     public abstract void OnNotify();
 }
 
-public class SpikeBall : Observer {
-    //The box gameobject which will do something
-    GameObject spikeObj;
-    //What will happen when this box gets an event
-    SpikeEvents spikeEvent;
+public class InstantiatedObject1 : Observer {
+    GameObject objectReference;
+    InstantiatedObjectEventBase eventReference;
 
-    public SpikeBall(GameObject spikeObj, SpikeEvents spikeEvent) {
-        this.spikeObj = spikeObj;
-        this.spikeEvent = spikeEvent;
+    public InstantiatedObject1(GameObject _objectReference, InstantiatedObjectEventBase _eventReference) {
+        this.objectReference = _objectReference;
+        this.eventReference = _eventReference;
     }
 
-    //What the box will do if the event fits it (will always fit but you will probably change that on your own)
     public override void OnNotify() {
-        SpikeColor(spikeEvent.SpikeEditorColor());
-    }
-
-    //The box will always change color
-    void SpikeColor(Color mat) {
-        if(!spikeObj)
+        GameObject spawnedEnemiesParent = GameObject.Find("Spawned Enemies");
+        if (objectReference == null || spawnedEnemiesParent == null || spawnedEnemiesParent.transform.childCount < 3)
             return;
 
-        spikeObj.GetComponent<Renderer>().materials[0].color = mat;
+        ChangeColor(eventReference.NewObjectColor());
+    }
 
+    void ChangeColor(Color mat) {
+        Renderer objectRenderer = objectReference.GetComponent<Renderer>();
+        if (objectRenderer == null)
+            return;
+
+        objectRenderer.materials[0].color = mat;
+    }
+}
+
+public class InstantiatedObject2 : Observer {
+    GameObject objectReference;
+    InstantiatedObjectEventBase eventReference;
+
+    public InstantiatedObject2(GameObject _objectReference, InstantiatedObjectEventBase _eventReference) {
+        this.objectReference = _objectReference;
+        this.eventReference = _eventReference;
+    }
+
+    public override void OnNotify() {
+        if (objectReference == null || GameController.instance.player == null || Vector3.Distance(GameController.instance.player.transform.position, objectReference.transform.position) > 5f)
+            return;
+
+        ChangeScale(eventReference.NewObjectScale());
+    }
+
+    void ChangeScale(Vector3 vec) {
+        //objectReference.transform.position += Vector3.up * 0.5f;
+        objectReference.transform.localScale = vec;
     }
 }

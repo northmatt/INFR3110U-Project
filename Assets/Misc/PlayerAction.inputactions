@@ -24,6 +24,24 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Sprint",
+                    "type": "Button",
+                    "id": "e99dad42-757f-4370-ad15-23cc0647662a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Crouch",
+                    "type": "Button",
+                    "id": "3c043cdc-eb4f-42ff-914a-e8e2248d467e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Look",
                     "type": "Value",
                     "id": "c37ef7b3-83b6-48ae-b04f-5a2df84979f6",
@@ -45,6 +63,15 @@
                     "name": "Menu",
                     "type": "Button",
                     "id": "4d4400b3-6901-475a-aaaf-09c616a950fc",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "EditorMode",
+                    "type": "Button",
+                    "id": "be192a77-5a44-42dd-a96f-c44694191d4d",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -142,6 +169,17 @@
                 },
                 {
                     "name": "",
+                    "id": "2f7c8d4a-9530-4b18-a6d0-fdaf65c3d3b6",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Shoot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "32d1563b-a2c3-40ad-91eb-4208536c0b20",
                     "path": "<Gamepad>/leftStick",
                     "interactions": "",
@@ -181,6 +219,72 @@
                     "processors": "",
                     "groups": "",
                     "action": "Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2ebfca85-dc8c-478a-95d5-746d4c21217b",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2bba9437-7965-41b0-a7c5-4d6b6f6cecbe",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Sprint",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "86a7a658-9b6f-450c-a7c8-3f3b02f8c1c9",
+                    "path": "<Gamepad>/leftStick/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Sprint",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2ecb55fe-0440-417d-a288-ec20a60f6700",
+                    "path": "<Keyboard>/backquote",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "EditorMode",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "96b01a13-45c0-40a9-9467-a7155a1fe6b2",
+                    "path": "<Keyboard>/c",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Crouch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1d3e7248-e6e5-4699-b14e-5fedc78c3fa0",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Crouch",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -256,18 +360,27 @@
                 {
                     "name": "Load",
                     "type": "Button",
-                    "id": "27023b1d-9380-45de-b628-b546ea1ac663",
+                    "id": "9495c41c-1821-4f7f-9884-b0d538261913",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Move",
+                    "type": "Value",
+                    "id": "7fe47f42-2b8d-473e-97ae-5c5f1b528d02",
+                    "expectedControlType": "Vector3",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
                 {
                     "name": "",
                     "id": "246314dc-f11d-4c2b-8d29-d09663c996ba",
-                    "path": "<Keyboard>/e",
+                    "path": "<Keyboard>/backquote",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -333,7 +446,7 @@
                 {
                     "name": "",
                     "id": "360fe2c0-c97d-4e23-8ca9-e2cba9d877a2",
-                    "path": "<Keyboard>/s",
+                    "path": "<Keyboard>/f5",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -342,9 +455,86 @@
                     "isPartOfComposite": false
                 },
                 {
+                    "name": "3D Vector",
+                    "id": "5425ae5e-60d4-44f5-97ad-db511a49b450",
+                    "path": "3DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "f29bacfb-a5a7-405f-91dd-e48b99c35dbc",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "651288a8-3d86-4776-8c43-6a95ed91e159",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "ebc287a5-028b-4e00-92af-a80345bbf283",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "bf2c63da-e5e1-499a-9379-c5db71343926",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "forward",
+                    "id": "9d3949ab-f84a-46bc-a922-b1787229c727",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "backward",
+                    "id": "64674477-030f-4ab1-994a-c35e3063c795",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
                     "name": "",
-                    "id": "9b98624e-09f8-436e-999d-4f71aa0052c0",
-                    "path": "<Keyboard>/l",
+                    "id": "e791e565-db5d-4bd9-8209-2ae9547edc7f",
+                    "path": "<Keyboard>/f9",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

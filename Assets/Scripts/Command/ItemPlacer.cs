@@ -3,27 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ItemPlacer : MonoBehaviour {
-    static List<Transform> items = new List<Transform>();
-
-    public static void PlaceItem(Transform item) {
-        Transform newItem = item;
-        items.Add(newItem);
-    }
-    public static void RedoItem(Vector3 position, Transform item) {
-        //Fix this, no reference after object deletion from line23
-        if (!item)
-            return;
-
-        Transform newitem = Instantiate(item, position, Quaternion.identity);
-        items.Add(newitem);
-    }
-    public static void RemoveItem(Vector3 position) {
-        foreach (Transform curItem in items) {
-            if (curItem.position == position) {
-                GameObject.Destroy(curItem.gameObject);
-                items.Remove(curItem);
-                break;
-            }
+    public static GameObject PlaceItem(GameObject item, Vector3? position = null) {
+        if (position == null) {
+            EditorController.instance.instantiatedPrefab = Instantiate(item, EditorController.instance.instantiateParent);
+            return EditorController.instance.instantiatedPrefab;
         }
+
+        return Instantiate(item, (Vector3)position, Quaternion.identity, EditorController.instance.instantiateParent);
+    }
+
+    public static void RemoveItem(GameObject item) {
+        GameObject.Destroy(item);
     }
 }

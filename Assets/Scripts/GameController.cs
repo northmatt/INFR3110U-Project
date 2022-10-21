@@ -5,7 +5,7 @@ using UnityEngine;
 public class GameController : MonoBehaviour {
     public static GameController instance;
 
-    public PlayerAction playerInput;
+    public PlayerAction inputAction;
     public GameObject player;
     public Canvas editorUI;
     public bool gamePaused = false;
@@ -13,11 +13,11 @@ public class GameController : MonoBehaviour {
     public byte collectables = 0;
 
     private void OnEnable() {
-        playerInput.Enable();
+        inputAction.Enable();
     }
 
     private void OnDisable() {
-        playerInput.Disable();
+        inputAction.Disable();
     }
 
     private void Awake() {
@@ -28,18 +28,18 @@ public class GameController : MonoBehaviour {
         }
 
         instance = this;
-        playerInput = new PlayerAction();
+        inputAction = new PlayerAction();
     }
 
     private void Start() {
-        //Need to make it find player on scene reload, also cameras on EditorManager (wrote this weeks ago but idk why I need to do EditorManager given it reloads with scene, should look into it more)
+        //Need to make it find player on scene reload, also cameras on EditorManager
         //DontDestroyOnLoad(this.gameObject);
 
         player = GameObject.FindGameObjectWithTag("Player");
 
         CursorHidden(true);
 
-        playerInput.Player.Menu.performed += cntxt => TogglePauseMenu();
+        inputAction.Player.Menu.performed += cntxt => TogglePauseMenu();
     }
 
     public void DoPause(bool isPaused) {
@@ -56,7 +56,7 @@ public class GameController : MonoBehaviour {
     }
 
     void TogglePauseMenu() {
-        if (EditorManager.instance.editorMode)
+        if (EditorController.instance.editorMode)
             return;
 
         DoPause(!gamePaused);
