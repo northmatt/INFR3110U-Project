@@ -358,6 +358,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Load",
+                    "type": "Button",
+                    "id": "9495c41c-1821-4f7f-9884-b0d538261913",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Move",
                     "type": "Value",
                     "id": "7fe47f42-2b8d-473e-97ae-5c5f1b528d02",
@@ -437,7 +446,7 @@
                 {
                     "name": "",
                     "id": "360fe2c0-c97d-4e23-8ca9-e2cba9d877a2",
-                    "path": "<Keyboard>/s",
+                    "path": "<Keyboard>/f5",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -521,6 +530,17 @@
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "e791e565-db5d-4bd9-8209-2ae9547edc7f",
+                    "path": "<Keyboard>/f9",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Load",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

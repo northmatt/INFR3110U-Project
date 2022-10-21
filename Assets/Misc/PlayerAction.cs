@@ -380,6 +380,15 @@ public partial class @PlayerAction : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Load"",
+                    ""type"": ""Button"",
+                    ""id"": ""9495c41c-1821-4f7f-9884-b0d538261913"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Move"",
                     ""type"": ""Value"",
                     ""id"": ""7fe47f42-2b8d-473e-97ae-5c5f1b528d02"",
@@ -459,7 +468,7 @@ public partial class @PlayerAction : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""360fe2c0-c97d-4e23-8ca9-e2cba9d877a2"",
-                    ""path"": ""<Keyboard>/s"",
+                    ""path"": ""<Keyboard>/f5"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -543,6 +552,17 @@ public partial class @PlayerAction : IInputActionCollection2, IDisposable
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e791e565-db5d-4bd9-8209-2ae9547edc7f"",
+                    ""path"": ""<Keyboard>/f9"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Load"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -568,6 +588,7 @@ public partial class @PlayerAction : IInputActionCollection2, IDisposable
         m_Editor_Undo = m_Editor.FindAction("Undo", throwIfNotFound: true);
         m_Editor_Redo = m_Editor.FindAction("Redo", throwIfNotFound: true);
         m_Editor_Save = m_Editor.FindAction("Save", throwIfNotFound: true);
+        m_Editor_Load = m_Editor.FindAction("Load", throwIfNotFound: true);
         m_Editor_Move = m_Editor.FindAction("Move", throwIfNotFound: true);
     }
 
@@ -724,6 +745,7 @@ public partial class @PlayerAction : IInputActionCollection2, IDisposable
     private readonly InputAction m_Editor_Undo;
     private readonly InputAction m_Editor_Redo;
     private readonly InputAction m_Editor_Save;
+    private readonly InputAction m_Editor_Load;
     private readonly InputAction m_Editor_Move;
     public struct EditorActions
     {
@@ -736,6 +758,7 @@ public partial class @PlayerAction : IInputActionCollection2, IDisposable
         public InputAction @Undo => m_Wrapper.m_Editor_Undo;
         public InputAction @Redo => m_Wrapper.m_Editor_Redo;
         public InputAction @Save => m_Wrapper.m_Editor_Save;
+        public InputAction @Load => m_Wrapper.m_Editor_Load;
         public InputAction @Move => m_Wrapper.m_Editor_Move;
         public InputActionMap Get() { return m_Wrapper.m_Editor; }
         public void Enable() { Get().Enable(); }
@@ -767,6 +790,9 @@ public partial class @PlayerAction : IInputActionCollection2, IDisposable
                 @Save.started -= m_Wrapper.m_EditorActionsCallbackInterface.OnSave;
                 @Save.performed -= m_Wrapper.m_EditorActionsCallbackInterface.OnSave;
                 @Save.canceled -= m_Wrapper.m_EditorActionsCallbackInterface.OnSave;
+                @Load.started -= m_Wrapper.m_EditorActionsCallbackInterface.OnLoad;
+                @Load.performed -= m_Wrapper.m_EditorActionsCallbackInterface.OnLoad;
+                @Load.canceled -= m_Wrapper.m_EditorActionsCallbackInterface.OnLoad;
                 @Move.started -= m_Wrapper.m_EditorActionsCallbackInterface.OnMove;
                 @Move.performed -= m_Wrapper.m_EditorActionsCallbackInterface.OnMove;
                 @Move.canceled -= m_Wrapper.m_EditorActionsCallbackInterface.OnMove;
@@ -795,6 +821,9 @@ public partial class @PlayerAction : IInputActionCollection2, IDisposable
                 @Save.started += instance.OnSave;
                 @Save.performed += instance.OnSave;
                 @Save.canceled += instance.OnSave;
+                @Load.started += instance.OnLoad;
+                @Load.performed += instance.OnLoad;
+                @Load.canceled += instance.OnLoad;
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
@@ -822,6 +851,7 @@ public partial class @PlayerAction : IInputActionCollection2, IDisposable
         void OnUndo(InputAction.CallbackContext context);
         void OnRedo(InputAction.CallbackContext context);
         void OnSave(InputAction.CallbackContext context);
+        void OnLoad(InputAction.CallbackContext context);
         void OnMove(InputAction.CallbackContext context);
     }
 }

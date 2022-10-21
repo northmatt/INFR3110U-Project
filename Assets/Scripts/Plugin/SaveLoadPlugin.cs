@@ -25,7 +25,7 @@ public class SaveLoadPlugin : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        playerInput = GameController.instance.playerInput;
+        playerInput = GameController.instance.inputAction;
         playerInput.Editor.Save.performed += cntxt => SaveEnemies();
         playerInput.Editor.Load.performed += cntxt => LoadEnemies();
 
