@@ -84,6 +84,7 @@ public class EditorController : MonoBehaviour {
         GameController.instance.DoPause(editorMode);
     }
 
+    //High level AddItem call
     public void AddItem(int itemId) {
         if (editorMode && instantiatedPrefab == null)
             CommandInvoker.AddCommand(new PlaceItemCommand(editorPrefabs[itemId]));

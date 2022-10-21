@@ -13,7 +13,7 @@ public class CharController : MonoBehaviour {
     public GameObject projectile;
     public Transform projectilePos;
 
-    private PlayerAction playerInput;
+    private PlayerAction inputAction;
     private Rigidbody rBody;
     private Collider coll;
     private List<GameObject> groundedObjects = new List<GameObject>();
@@ -24,19 +24,19 @@ public class CharController : MonoBehaviour {
     private bool crouch = false;
 
     private void Start() {
-        playerInput = GameController.instance.inputAction;
+        inputAction = GameController.instance.inputAction;
 
-        playerInput.Player.Move.performed += cntxt => inputs = cntxt.ReadValue<Vector2>();
-        playerInput.Player.Move.canceled += cntxt => inputs = Vector2.zero;
+        inputAction.Player.Move.performed += cntxt => inputs = cntxt.ReadValue<Vector2>();
+        inputAction.Player.Move.canceled += cntxt => inputs = Vector2.zero;
 
-        playerInput.Player.Jump.performed += cntxt => TryJump();
+        inputAction.Player.Jump.performed += cntxt => TryJump();
 
-        playerInput.Player.Sprint.performed += cntxt => sprint = true;
-        playerInput.Player.Sprint.canceled += cntxt => sprint = false;
+        inputAction.Player.Sprint.performed += cntxt => sprint = true;
+        inputAction.Player.Sprint.canceled += cntxt => sprint = false;
 
-        playerInput.Player.Crouch.performed += cntxt => ToggleCrouch();
+        inputAction.Player.Crouch.performed += cntxt => ToggleCrouch();
 
-        //playerInput.Player.Shoot.performed += cntxt => Shoot();
+        //inputAction.Player.Shoot.performed += cntxt => Shoot();
 
         rBody = GetComponent<Rigidbody>();
         coll = GetComponent<Collider>();

@@ -2,55 +2,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemySpawner : MonoBehaviour
-{
+public class EnemySpawner : MonoBehaviour {
     //create holder for spawnPoints
     public GameObject[] spawnPoints;
-    GameObject currentPoint;
-    int index;
-
     public GameObject[] enemies;
     public float minTimeBetweenSpawns;
     public float maxTimeBetweenSpawns;
-    public bool canSpawn;
     public float spawnTime;
     public int enemyCount;
-    public bool spawnerDone;
-    public GameObject spawnerDoneGameObject;
 
-
-    private void Start()
-    {
+    private void Start() {
         Invoke("spawnEnemy", 0.5f);
     }
 
-    private void Update()
-    {
-        if(canSpawn)
-        {
-            spawnTime -= Time.deltaTime;
-            if(spawnTime < 0)
-            {
-                canSpawn = false;
-            }
-        }
+    private void FixedUpdate() {
+        if (spawnTime >= 0f)
+            spawnTime -= Time.fixedDeltaTime;
     }
 
-    void spawnEnemy()
-    {
-        index = Random.Range(0, spawnPoints.Length);
-        currentPoint = spawnPoints[index];
+    void spawnEnemy() {
         float timeBetweenSpawns = Random.Range(minTimeBetweenSpawns, maxTimeBetweenSpawns);
 
-        if(canSpawn)
-        {
-            Instantiate(enemies[Random.Range(0, enemies.Length)], currentPoint.transform.position, Quaternion.identity);
-            enemyCount++;
+        if(spawnTime >= 0f) {
+            Instantiate(enemies[Random.Range(0, enemies.Length)], spawnPoints[Random.Range(0, spawnPoints.Length)].transform.position, Quaternion.identity);
+            ++enemyCount;
         }
+        else {
+            enabled = false;
+        }
+
         Invoke("spawnEnemy", timeBetweenSpawns);
-        if(spawnerDone)
-        {
-            spawnerDoneGameObject.SetActive(true);
-        }
     }
 }
