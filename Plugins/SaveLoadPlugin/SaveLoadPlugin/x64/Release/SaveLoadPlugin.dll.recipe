@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\Users\krftd\OneDrive\Documents\School\Game Engine Design\SaveLoadPlugin\x64\Release\SaveLoadPlugin.dll</FullPath>
+      <FullPath>C:\Users\krftd\OneDrive\Documents\School\Game Engine Design\SaveLoadPlugin\SaveLoadPlugin\x64\Release\SaveLoadPlugin.dll</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

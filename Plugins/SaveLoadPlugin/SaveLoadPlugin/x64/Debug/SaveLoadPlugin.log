@@ -1,5 +1,6 @@
 ﻿  GameObject.cpp
-  Main.cpp
+C:\Users\krftd\OneDrive\Documents\School\Game Engine Design\SaveLoadPlugin\SaveLoadPlugin\GameObject.cpp(52,25): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
   Wrapper.cpp
   Generating Code...
-  SaveLoadPlugin.vcxproj -> C:\Users\krftd\OneDrive\Documents\School\Game Engine Design\SaveLoadPlugin\x64\Debug\SaveLoadPlugin.exe
+  LINK : C:\Users\krftd\OneDrive\Documents\School\Game Engine Design\SaveLoadPlugin\SaveLoadPlugin\x64\Debug\SaveLoadPlugin.exe not found or not built by the last incremental link; performing full link
+  SaveLoadPlugin.vcxproj -> C:\Users\krftd\OneDrive\Documents\School\Game Engine Design\SaveLoadPlugin\SaveLoadPlugin\x64\Debug\SaveLoadPlugin.exe
