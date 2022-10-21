@@ -36,7 +36,7 @@ public class CharController : MonoBehaviour {
 
         inputAction.Player.Crouch.performed += cntxt => ToggleCrouch();
 
-        //inputAction.Player.Shoot.performed += cntxt => Shoot();
+        inputAction.Player.Shoot.performed += cntxt => Shoot();
 
         rBody = GetComponent<Rigidbody>();
         coll = GetComponent<Collider>();
@@ -107,11 +107,7 @@ public class CharController : MonoBehaviour {
     }
 
     private void Shoot() {
-        if (EditorController.instance.editorMode)
-            return;
-
-        Rigidbody bulletRb = Instantiate(projectile, projectilePos.transform.position, Quaternion.identity).GetComponent<Rigidbody>();
-        bulletRb.AddForce(transform.forward * 32f + transform.up * 1f, ForceMode.Impulse);
+        EditorController.instance.observers.Notify();
     }
 
     //Should prolly have an FSM at this point, crouchSize should be done by anim

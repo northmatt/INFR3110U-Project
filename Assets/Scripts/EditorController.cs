@@ -17,6 +17,7 @@ public class EditorController : MonoBehaviour {
     public float editorMovement = 0f;
 
     private Vector3 mousePos = Vector3.zero;
+    [HideInInspector] public Subject observers = new Subject();
 
     // Start is called before the first frame update
     void Start() {
@@ -91,8 +92,15 @@ public class EditorController : MonoBehaviour {
     }
 
     public void DropItem() {
-        if (editorMode && instantiatedPrefab != null)
-            instantiatedPrefab = null;
+        if (!editorMode || instantiatedPrefab == null)
+            return;
+
+        if (Random.value > 0.5f)
+            observers.AddObserver(new InstantiatedObject1(instantiatedPrefab, new InstantiatedObjectEvent1()));
+        else
+            observers.AddObserver(new InstantiatedObject1(instantiatedPrefab, new InstantiatedObjectEvent2()));
+
+        instantiatedPrefab = null;
     }
 
 }

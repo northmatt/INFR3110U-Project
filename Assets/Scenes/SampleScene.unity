@@ -1557,6 +1557,7 @@ Transform:
   m_Children:
   - {fileID: 734337508}
   - {fileID: 607144834}
+  - {fileID: 1048727379}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1664,6 +1665,37 @@ MonoBehaviour:
   distance: 3
   sensitivity: 1
   rotXMinMax: {x: 310, y: 450}
+--- !u!1 &1048727378
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1048727379}
+  m_Layer: 0
+  m_Name: Spawned Enemies
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1048727379
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1048727378}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 831458492}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1060114662
 GameObject:
   m_ObjectHideFlags: 0
@@ -3498,13 +3530,11 @@ MonoBehaviour:
   enemies:
   - {fileID: 5338839952519555296, guid: b6ab778d05eb5fb41960808fdc0b8f0d, type: 3}
   - {fileID: 3655139491796910633, guid: b2efb0da82c2d6448bed9e911144f9a6, type: 3}
+  instantiateParent: {fileID: 1048727379}
   minTimeBetweenSpawns: 2
   maxTimeBetweenSpawns: 5
-  canSpawn: 1
   spawnTime: 20
   enemyCount: 0
-  spawnerDone: 0
-  spawnerDoneGameObject: {fileID: 0}
 --- !u!1001 &2112121850
 PrefabInstance:
   m_ObjectHideFlags: 0
