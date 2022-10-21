@@ -274,6 +274,15 @@ public partial class @PlayerAction : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Load"",
+                    ""type"": ""Button"",
+                    ""id"": ""27023b1d-9380-45de-b628-b546ea1ac663"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -353,6 +362,17 @@ public partial class @PlayerAction : IInputActionCollection2, IDisposable
                     ""action"": ""Save"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9b98624e-09f8-436e-999d-4f71aa0052c0"",
+                    ""path"": ""<Keyboard>/l"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Load"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -375,6 +395,7 @@ public partial class @PlayerAction : IInputActionCollection2, IDisposable
         m_Editor_Undo = m_Editor.FindAction("Undo", throwIfNotFound: true);
         m_Editor_Redo = m_Editor.FindAction("Redo", throwIfNotFound: true);
         m_Editor_Save = m_Editor.FindAction("Save", throwIfNotFound: true);
+        m_Editor_Load = m_Editor.FindAction("Load", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -506,6 +527,7 @@ public partial class @PlayerAction : IInputActionCollection2, IDisposable
     private readonly InputAction m_Editor_Undo;
     private readonly InputAction m_Editor_Redo;
     private readonly InputAction m_Editor_Save;
+    private readonly InputAction m_Editor_Load;
     public struct EditorActions
     {
         private @PlayerAction m_Wrapper;
@@ -517,6 +539,7 @@ public partial class @PlayerAction : IInputActionCollection2, IDisposable
         public InputAction @Undo => m_Wrapper.m_Editor_Undo;
         public InputAction @Redo => m_Wrapper.m_Editor_Redo;
         public InputAction @Save => m_Wrapper.m_Editor_Save;
+        public InputAction @Load => m_Wrapper.m_Editor_Load;
         public InputActionMap Get() { return m_Wrapper.m_Editor; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -547,6 +570,9 @@ public partial class @PlayerAction : IInputActionCollection2, IDisposable
                 @Save.started -= m_Wrapper.m_EditorActionsCallbackInterface.OnSave;
                 @Save.performed -= m_Wrapper.m_EditorActionsCallbackInterface.OnSave;
                 @Save.canceled -= m_Wrapper.m_EditorActionsCallbackInterface.OnSave;
+                @Load.started -= m_Wrapper.m_EditorActionsCallbackInterface.OnLoad;
+                @Load.performed -= m_Wrapper.m_EditorActionsCallbackInterface.OnLoad;
+                @Load.canceled -= m_Wrapper.m_EditorActionsCallbackInterface.OnLoad;
             }
             m_Wrapper.m_EditorActionsCallbackInterface = instance;
             if (instance != null)
@@ -572,6 +598,9 @@ public partial class @PlayerAction : IInputActionCollection2, IDisposable
                 @Save.started += instance.OnSave;
                 @Save.performed += instance.OnSave;
                 @Save.canceled += instance.OnSave;
+                @Load.started += instance.OnLoad;
+                @Load.performed += instance.OnLoad;
+                @Load.canceled += instance.OnLoad;
             }
         }
     }
@@ -593,5 +622,6 @@ public partial class @PlayerAction : IInputActionCollection2, IDisposable
         void OnUndo(InputAction.CallbackContext context);
         void OnRedo(InputAction.CallbackContext context);
         void OnSave(InputAction.CallbackContext context);
+        void OnLoad(InputAction.CallbackContext context);
     }
 }
