@@ -49,8 +49,6 @@ public class GameController : MonoBehaviour {
         CursorHidden(!gamePaused);
 
         Time.timeScale = isPaused ? 0 : 1;
-
-        pauseUI.enabled = isPaused;
     }
 
     void CursorHidden(bool isHidden) {
@@ -60,19 +58,11 @@ public class GameController : MonoBehaviour {
     }
 
     void TogglePauseMenu() {
+        //Dont run pause code if in editor mode
         if (EditorController.instance.editorMode)
-            //    //added key rebinding ui toggle
-            //    //update: this method doesnt work, the canvas didnt show up
-            //{
-            //    editorUI.enabled = true;
-            //}
-            //else
-            //{
-            //    editorUI.enabled = false;
-            //}
-            return;
-           
+            return;   
 
         DoPause(!gamePaused);
+        pauseUI.enabled = gamePaused;
     }
 }

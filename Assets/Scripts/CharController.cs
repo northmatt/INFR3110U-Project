@@ -1,8 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-//added for dynamic rebinding
-using UnityEngine.InputSystem;
 
 public class CharController : MonoBehaviour {
     public float moveForce = 0f;

@@ -1,6 +1,6 @@
 ﻿using System;
 using UnityEngine;
-//Used in MM2/MM from JayPEG/JayPOG, am dev of it
+//Used in MM2/MM from JayPEG/JayPOG, MattN is dev of it
 
 public class CameraController : MonoBehaviour {
     public Transform following;
