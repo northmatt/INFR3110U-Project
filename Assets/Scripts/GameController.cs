@@ -8,6 +8,8 @@ public class GameController : MonoBehaviour {
     public PlayerAction inputAction;
     public GameObject player;
     public Canvas editorUI;
+    //added for key rebinding
+    public Canvas pauseUI;
     public bool gamePaused = false;
     public bool CursorLocked = false;
     public byte collectables = 0;
@@ -47,6 +49,8 @@ public class GameController : MonoBehaviour {
         CursorHidden(!gamePaused);
 
         Time.timeScale = isPaused ? 0 : 1;
+
+        pauseUI.enabled = isPaused;
     }
 
     void CursorHidden(bool isHidden) {
@@ -57,7 +61,17 @@ public class GameController : MonoBehaviour {
 
     void TogglePauseMenu() {
         if (EditorController.instance.editorMode)
+            //    //added key rebinding ui toggle
+            //    //update: this method doesnt work, the canvas didnt show up
+            //{
+            //    editorUI.enabled = true;
+            //}
+            //else
+            //{
+            //    editorUI.enabled = false;
+            //}
             return;
+           
 
         DoPause(!gamePaused);
     }

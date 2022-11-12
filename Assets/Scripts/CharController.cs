@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+//added for dynamic rebinding
+using UnityEngine.InputSystem;
 
 public class CharController : MonoBehaviour {
     public float moveForce = 0f;
@@ -12,6 +14,9 @@ public class CharController : MonoBehaviour {
 
     public GameObject projectile;
     public Transform projectilePos;
+
+    //added for dynamic rebinding
+    //private PlayerInput playerInput;
 
     private PlayerAction inputAction;
     private Rigidbody rBody;
@@ -25,6 +30,9 @@ public class CharController : MonoBehaviour {
 
     private void Start() {
         inputAction = GameController.instance.inputAction;
+
+        //added for dynamic rebinding
+        //playerInput = GetComponent<PlayerInput>();
 
         inputAction.Player.Move.performed += cntxt => inputs = cntxt.ReadValue<Vector2>();
         inputAction.Player.Move.canceled += cntxt => inputs = Vector2.zero;
