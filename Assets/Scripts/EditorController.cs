@@ -38,8 +38,6 @@ public class EditorController : MonoBehaviour {
 
         mainCam.enabled = true;
         editorCam.enabled = false;
-
-        inputAction.Editor.Disable();
     }
 
     // Update is called once per frame

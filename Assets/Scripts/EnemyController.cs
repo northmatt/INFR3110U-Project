@@ -4,31 +4,39 @@ using UnityEngine;
 using UnityEngine.AI;
 //Created by MattN six years ago
 
+enum EnemyState {
+    Wander,
+    Chase,
+    Attack,
+    Death
+}
+
 public class EnemyController : MonoBehaviour {
-    public GameObject player;
-    public float minAccurateDist;
+    public float wanderRange;
     public float sightDistance;
-    public float FieldOfView;
+    public float fieldOfView;
     public float agroTime;
     public byte health;
     public AudioClip[] noises;
-    [HideInInspector] public Animator anim;
-    [HideInInspector] public bool isAttacking;
 
-    private AudioSource aS;
-    private ParticleSystem pS;
-    private NavMeshAgent agent;
+    private Animator enemyAnimator;
+    private AudioSource enemyAudioSource;
+    private ParticleSystem enemyParticleSystem;
+    private NavMeshAgent enemyNavAgent;
     private Transform enemyHead;
+    private Transform player;
     private LayerMask enemyLayerIgnore;
+    private EnemyState currentState;
     private bool playerInSight;
     private bool isMoving;
+    private bool isAttacking;
     private float navUpdateTime;
-    private float agro;
+    private float currentAgroTime;
 
     private void Start() {
-        agent = GetComponent<NavMeshAgent>();
-        anim = transform.GetChild(0).GetComponent<Animator>();
-        aS = GetComponent<AudioSource>();
+        enemyNavAgent = GetComponent<NavMeshAgent>();
+        enemyAnimator = transform.GetChild(0).GetComponent<Animator>();
+        enemyAudioSource = GetComponent<AudioSource>();
 
         enemyLayerIgnore = ~(1 << LayerMask.NameToLayer("Enemy"));
 
@@ -39,66 +47,60 @@ public class EnemyController : MonoBehaviour {
                 enemyHead = child;
 
             if (child.gameObject.name == "Particle Effects")
-                pS = child.GetComponent<ParticleSystem>();
+                enemyParticleSystem = child.GetComponent<ParticleSystem>();
         }
 
         Rigidbody[] rbs = transform.GetComponentsInChildren<Rigidbody>();
         foreach(Rigidbody rb3d in rbs)
             rb3d.isKinematic = true;
+
+        player = GameController.instance.player.transform;
+
+        currentState = EnemyState.Wander;
     }
 
     private void FixedUpdate() {
-        //Bad code cuz EnemyController Start() is after GameController Start()
-        if (player == null) {
-            player = GameController.instance.player;
+        if (GameController.instance.gamePaused)
             return;
-        }
-        //ParticleSystem.MainModule tempMain = pS.main;
-
-        //If enemy has died then remove unneeded components and turn the enmy into a ragdoll
-        if (health == 0) {
-            //tempMain.loop = false;
-
-            //Destroy(pS, 5);
-            Destroy(anim);
-            Destroy(agent);
-            Destroy(GetComponent<CapsuleCollider>());
-
-            Rigidbody[] rbs = transform.GetComponentsInChildren<Rigidbody>();
-            foreach (Rigidbody rb3d in rbs)
-                rb3d.isKinematic = false;
-
-            Destroy(this);
-
-            return;
-        }
 
         LookForPlayer();
 
-        if (!aS.isPlaying)
+        if (!enemyAudioSource.isPlaying)
             PlayNoise();
 
-        //particles fade depending on the distance of the player
-        /*ParticleSystem.MinMaxGradient tempGradient = tempMain.startColor;
-        Color tempColor = tempGradient.color;
-        tempColor.a = Mathf.Clamp(1 - (Vector3.Distance(transform.position, player.transform.position) / 25), 0, 1);
-        tempGradient.color = tempColor;
-        tempMain.startColor = tempGradient;*/
+        isMoving = (enemyNavAgent.velocity != Vector3.zero);
 
-        isMoving = (agent.velocity != Vector3.zero);
+        enemyAnimator.SetBool("isWalking", isMoving);
+        enemyAnimator.SetBool("isAttacking", false);
 
-        anim.SetBool("isWalking", isMoving);
-        anim.SetBool("isAttacking", false);
+        switch (currentState) {
+            case EnemyState.Wander:
+                RunWanderState();
+                break;
+            case EnemyState.Chase:
+                RunChaseState();
+                break;
+            case EnemyState.Attack:
+                RunAttackState();
+                break;
+            case EnemyState.Death:
+                RunDeathState();
+                break;
+            default:
+                break;
+        }
+    }
 
-        isAttacking = anim.GetCurrentAnimatorStateInfo(0).IsName("Enemy Attack");
+    private void RunWanderState() {
+        if (currentAgroTime > 0f) {
+            currentState = EnemyState.Chase;
+            return;
+        }
 
-        //enemy cannot move while attacking
-        agent.enabled = !isAttacking;
-
-        //if the player is far away then only update the nav dest every five seconds
-        if (Vector3.Distance(player.transform.position, transform.position) >= minAccurateDist) {
+        //if enemy is outside the wander range then only update the nav dest every five seconds
+        if (Vector3.Distance(player.position, transform.position) >= wanderRange) {
             if (navUpdateTime <= 0f) {
-                changeNavDest(player.transform.position, minAccurateDist - 1f);
+                changeNavDest(player.position, wanderRange - 1f);
                 navUpdateTime = 5f;
             }
 
@@ -107,51 +109,94 @@ public class EnemyController : MonoBehaviour {
             return;
         }
 
+        //change the dest just before it reaches it's destination
+        if (Vector3.Distance(transform.position, enemyNavAgent.destination) <= enemyNavAgent.stoppingDistance + 1f)
+            changeNavDest(player.position, wanderRange - 1f);
+    }
+
+    private void RunChaseState() {
         //if the enemy is targeting a player then go directly to it's position
-        //if it's close then attack and always look at the player
-        if (agro >= 1) {
-            if (Vector3.Distance(transform.position, player.transform.position) <= agent.stoppingDistance && playerInSight || isAttacking) {
-                Vector3 tempVector = player.transform.position - transform.position;
-                tempVector.y = 0;
-                transform.rotation = Quaternion.LookRotation(tempVector);
-            }
 
-            if (Vector3.Distance(transform.position, player.transform.position) <= agent.stoppingDistance && playerInSight) {
-                anim.SetBool("isAttacking", true);
-                return;
-            }
+        if (!playerInSight)
+            currentAgroTime -= Time.fixedDeltaTime;
 
-            changeNavDest(player.transform.position);
-
-            agro -= Time.fixedDeltaTime;
+        if (currentAgroTime <= 0f) {
+            currentAgroTime = 0f;
+            currentState = EnemyState.Wander;
 
             return;
         }
 
-        //if the enemy is neither targeting the player or far away then change the dest just before it reaches it's destination
-        if (Vector3.Distance(transform.position, agent.destination) <= agent.stoppingDistance + 1)
-            changeNavDest(player.transform.position, minAccurateDist - 1);
+
+        if (Vector3.Distance(transform.position, player.transform.position) <= enemyNavAgent.stoppingDistance && playerInSight || isAttacking) {
+            currentState = EnemyState.Attack;
+
+            return;
+        }
+
+        changeNavDest(player.transform.position);
+    }
+
+    private void RunAttackState() {
+        isAttacking = enemyAnimator.GetCurrentAnimatorStateInfo(0).IsName("EnemyAttack");
+
+        //enemy cannot move while attacking
+        enemyNavAgent.enabled = !isAttacking;
+
+        //Change to maxAttackRange?
+        if (!isAttacking && (!playerInSight || Vector3.Distance(transform.position, player.transform.position) >= enemyNavAgent.stoppingDistance)) {
+            currentState = EnemyState.Chase;
+
+            return;
+        }
+
+        if (!isAttacking)
+            enemyAnimator.SetBool("isAttacking", true);
+
+        //consider moving code so that enemy cant change direction during attack animation, prolly too OP
+        //consider using Chase state for changing directions with above in mind, also smoothed rotation
+        Vector3 tempVector = player.transform.position - transform.position;
+        tempVector.y = 0;
+        transform.rotation = Quaternion.LookRotation(tempVector);
+    }
+
+    private void RunDeathState() {
+        //If enemy has died then remove unneeded components and turn the enmy into a ragdoll
+
+        //ParticleSystem.MainModule tempMain = enemyParticleSystem.main;
+        //tempMain.loop = false;
+
+        //Destroy(pS, 5);
+        Destroy(enemyAnimator);
+        Destroy(enemyNavAgent);
+        Destroy(GetComponent<CapsuleCollider>());
+
+        Rigidbody[] rbs = transform.GetComponentsInChildren<Rigidbody>();
+        foreach (Rigidbody rb3d in rbs)
+            rb3d.isKinematic = false;
+
+        Destroy(this);
     }
 
     //changes the nav dest to the given posision and will offset the distance randomly if a max offset distance is given
-    void changeNavDest(Vector3 pos, float offsetDist = 0) {
-        if (anim.GetCurrentAnimatorStateInfo(0).IsName("Zombie Attack"))
+    private void changeNavDest(Vector3 pos, float offsetDist = 0f) {
+        if (enemyAnimator.GetCurrentAnimatorStateInfo(0).IsName("EnemyAttack"))
             return;
 
         Vector3 offset = Vector3.zero;
 
-        if (offsetDist != 0)
-            offset += Quaternion.Euler(Vector3.up * Random.Range(0, 360)) * Vector3.forward * Random.Range(0, offsetDist);
+        if (offsetDist != 0f)
+            offset += Quaternion.Euler(Vector3.up * Random.Range(0f, 360f)) * Vector3.forward * Random.Range(0f, offsetDist);
 
-        agent.SetDestination(pos + offset);
+        enemyNavAgent.SetDestination(pos + offset);
     }
 
     //1.-make sure the distance between the player and enemy is in the sight distance
     //creates five points for linecasts. head, left chest, middle chest, right chest, and feet
-    void LookForPlayer() {
+    private void LookForPlayer() {
         playerInSight = false;
 
-        if (Vector3.Distance(player.transform.position, enemyHead.position) > sightDistance)
+        if (Vector3.Distance(player.position, enemyHead.position) > sightDistance)
             return;
 
         Vector3[] offsets = new Vector3[5];
@@ -159,50 +204,44 @@ public class EnemyController : MonoBehaviour {
         offsets[0] = Vector3.up;
         offsets[1] = Vector3.zero;
         offsets[2] = Vector3.down;
-        offsets[3] = Quaternion.LookRotation(player.transform.position - enemyHead.position) * Vector3.right * 0.35f;
-        offsets[4] = Quaternion.LookRotation(player.transform.position - enemyHead.position) * Vector3.left * 0.35f;
+        offsets[3] = Quaternion.LookRotation(player.position - enemyHead.position) * Vector3.right * 0.35f;
+        offsets[4] = Quaternion.LookRotation(player.position - enemyHead.position) * Vector3.left * 0.35f;
 
-        foreach (Vector3 offsetValue in offsets)
-            checkOffset(offsetValue);
-    }
-
-    //check if point is within it's field of view
-    //checks if the linecast hit anything
-    //check if the object that was hit is the player
-    //if so set it's agro time to max
-    void checkOffset(Vector3 offset) {
-        Vector3 lineEnd = player.transform.position + offset;
-
-        float angle = Vector3.SignedAngle(lineEnd - enemyHead.position, enemyHead.forward, Vector3.up);
-
-        if (Mathf.Abs(angle) > FieldOfView * 0.5f)
-            return;
-
+        //init variables once to use in for loop
+        Vector3 lineEnd = Vector3.zero;
+        float angle = 0f;
         RaycastHit hit;
 
-        if (!Physics.Linecast(enemyHead.position, lineEnd, out hit, enemyLayerIgnore, QueryTriggerInteraction.Ignore))
-            return;
+        //check if point is within it's field of view
+        //checks if the linecast hit anything
+        //check if the object that was hit is the player
+        //if so set it's agro time to max
+        foreach (Vector3 offsetValue in offsets) {
+            lineEnd = player.position + offsetValue;
+            angle = Vector3.SignedAngle(lineEnd - enemyHead.position, enemyHead.forward, Vector3.up);
 
-        if (!hit.transform.gameObject.CompareTag("Player"))
-            return;
+            if (Mathf.Abs(angle) > fieldOfView * 0.5f || 
+                !Physics.Linecast(enemyHead.position, lineEnd, out hit, enemyLayerIgnore, QueryTriggerInteraction.Ignore) || 
+                !hit.transform.gameObject.CompareTag("Player"))
+                continue;
 
-        agro = agroTime;
-        playerInSight = true;
+            currentAgroTime = agroTime;
+            playerInSight = true;
 
-        Debug.DrawLine(enemyHead.position, lineEnd, Color.red, 0.03f);
+            Debug.DrawLine(enemyHead.position, lineEnd, Color.red, 0.03f);
+        }
     }
 
     private void PlayNoise() {
         if (noises.Length == 0)
             return;
 
-        // pick & play a random enemy sound from the array,
-        // excluding sound at index 0
+        //play a random sound from the array, excluding sound at index 0
         int n = Random.Range(1, noises.Length);
-        aS.clip = noises[n];
-        aS.PlayOneShot(aS.clip);
-        // move picked sound to index 0 so it's not picked next time
+        enemyAudioSource.clip = noises[n];
+        enemyAudioSource.PlayOneShot(enemyAudioSource.clip);
+        //move picked sound to index 0 so it's not picked next time
         noises[n] = noises[0];
-        noises[0] = aS.clip;
+        noises[0] = enemyAudioSource.clip;
     }
 }

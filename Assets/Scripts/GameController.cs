@@ -6,7 +6,7 @@ public class GameController : MonoBehaviour {
     public static GameController instance;
 
     public PlayerAction inputAction;
-    public GameObject player;
+    public CharController player;
     public Canvas editorUI;
     //added for key rebinding
     public Canvas pauseUI;
@@ -23,7 +23,7 @@ public class GameController : MonoBehaviour {
     }
 
     private void Awake() {
-        //Not ideal to init singleton in Awake(), but needs to run before any script runs Start()
+        //Not ideal to init singleton in Awake(), but needs to run before any script runs Start()/OnEnable()
         if (instance != null) {
             Destroy(this.gameObject);
             return;
@@ -37,11 +37,14 @@ public class GameController : MonoBehaviour {
         //Need to make it find player on scene reload, also cameras on EditorManager
         //DontDestroyOnLoad(this.gameObject);
 
-        player = GameObject.FindGameObjectWithTag("Player");
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<CharController>();
 
         CursorHidden(true);
 
         inputAction.Player.Menu.performed += cntxt => TogglePauseMenu();
+
+        inputAction.Editor.Disable();
+        inputAction.UI.Disable();
     }
 
     public void DoPause(bool isPaused) {
@@ -51,18 +54,22 @@ public class GameController : MonoBehaviour {
         Time.timeScale = isPaused ? 0 : 1;
     }
 
-    void CursorHidden(bool isHidden) {
+    private void CursorHidden(bool isHidden) {
         CursorLocked = isHidden;
         Cursor.lockState = CursorLocked ? CursorLockMode.Locked : CursorLockMode.None;
         Cursor.visible = !CursorLocked;
     }
 
-    void TogglePauseMenu() {
+    private void TogglePauseMenu() {
         //Dont run pause code if in editor mode
         if (EditorController.instance.editorMode)
             return;   
 
         DoPause(!gamePaused);
         pauseUI.enabled = gamePaused;
+    }
+
+    public void QuitGame() {
+        Application.Quit();
     }
 }
