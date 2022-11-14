@@ -42,6 +42,10 @@ public class EnemyStateAttack : EnemyState {
         if (!enemyScriptReference.isAttacking)
             enemyAnimator.SetBool("isAttacking", true);
 
+        if (enemyScriptReference.fireCooldown <= 0) {
+            enemyScriptReference.Shoot();
+        }
+
         //consider moving code so that enemy cant change direction during attack animation, prolly too OP
         //consider using Chase state for changing directions with above in mind, also smoothed rotation
         Vector3 tempVector = player.transform.position - enemyScriptReference.transform.position;

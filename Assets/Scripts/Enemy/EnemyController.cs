@@ -12,12 +12,16 @@ public enum EnemyStateNames {
 }
 
 public class EnemyController : MonoBehaviour {
+    public GameObject projectile;
+    public Transform projectilePos;
     public float wanderRange;
     public float sightDistance;
     public float fieldOfView;
     public float agroTime;
     public float soundSensitivty;
     public byte health;
+    public float fireInterval; // time in seconds between shots
+    public float gunStrength; // impulse initialiy applied to the bullets
     public AudioClip[] noises;
 
     private Animator enemyAnimator;
@@ -28,6 +32,7 @@ public class EnemyController : MonoBehaviour {
     private LayerMask enemyLayerIgnore;
     private List<EnemyState> enemyStates = new List<EnemyState>();
     private EnemyState currentState;
+    [HideInInspector] public float fireCooldown = 0; // time in seconds until they can shoot again
     [HideInInspector] public bool playerInSight = false;
     [HideInInspector] public bool isMoving = false;
     [HideInInspector] public bool isAttacking = false;
@@ -67,6 +72,11 @@ public class EnemyController : MonoBehaviour {
         if (GameController.instance.gamePaused)
             return;
 
+        if (health <= 0) {
+            ChangeState(EnemyStateNames.Death);
+            return;
+        }
+        
         LookForPlayer();
 
         if (!enemyAudioSource.isPlaying)
@@ -78,6 +88,8 @@ public class EnemyController : MonoBehaviour {
         enemyAnimator.SetBool("isAttacking", false);
 
         heardSound = false;
+
+        fireCooldown -= Time.deltaTime;
 
         currentState.UpdateState();
     }
@@ -189,6 +201,19 @@ public class EnemyController : MonoBehaviour {
         //move picked sound to index 0 so it's not picked next time
         noises[n] = noises[0];
         noises[0] = enemyAudioSource.clip;
+    }
+
+    // shoot a bullet at the player
+    public void Shoot() {
+        Rigidbody bulletRb;
+        if (GameController.instance.useObjectPooling) {
+            bulletRb = ObjectPooler.instance.SpawnFromPool("Bullet", projectilePos.transform.position, Quaternion.identity).GetComponent<Rigidbody>();
+        }
+        else {
+            bulletRb = Instantiate(projectile, projectilePos.position, projectilePos.rotation, ObjectPooler.instance.transform).GetComponent<Rigidbody>();
+        }
+        bulletRb.AddForce(projectilePos.transform.forward * gunStrength, ForceMode.Impulse);
+        fireCooldown = fireInterval;
     }
 
     public void OnNotify(Vector3 soundPosition, float soundDB) {
