@@ -8,10 +8,21 @@ Video Explaination:
 
 [![Video Explaination](http://img.youtube.com/vi/30ci0zeTQPg/0.jpg)](http://www.youtube.com/watch?v=30ci0zeTQPg "INFR3110U: Group Assignment 1")
 
-Slidedeck:
+Slidedeck of team members:
 
-![Slidedeck](../Kyle/Slidedeck.png)
+![Slidedeck](Information/TeamMembers.png)
 
 Command Pattern UML:
 
-![Command Pattern UML](../Kyle/CommandPattern.png)
+![Command Pattern UML](Information/CommandPattern.png)
+
+State Pattern UML:
+
+![State Pattern UML](Information/StatePatternUML.png)
+
+Profiling of Object Pooling:
+------
+With:
+![With Object Pooling](Information/ProfilerWithPooling.png)
+Without:
+![Without Object Pooling](Information/ProfilerWithoutPooling.png)
