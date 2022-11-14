@@ -6,11 +6,15 @@ using UnityEngine.AI;
 
 public class EnemyController : MonoBehaviour {
     public GameObject player;
+    public GameObject projectile;
+    public Transform projectilePos;
     public float minAccurateDist;
     public float sightDistance;
     public float FieldOfView;
     public float agroTime;
     public byte health;
+    public float fireInterval; // time in seconds between shots
+    public float gunStrength; // impulse initialiy applied to the bullets
     public AudioClip[] noises;
     [HideInInspector] public Animator anim;
     [HideInInspector] public bool isAttacking;
@@ -24,6 +28,7 @@ public class EnemyController : MonoBehaviour {
     private bool isMoving;
     private float navUpdateTime;
     private float agro;
+    private float fireCooldown = 0; // time in seconds until they can shoot again
 
     private void Start() {
         agent = GetComponent<NavMeshAgent>();
@@ -56,7 +61,7 @@ public class EnemyController : MonoBehaviour {
         //ParticleSystem.MainModule tempMain = pS.main;
 
         //If enemy has died then remove unneeded components and turn the enmy into a ragdoll
-        if (health == 0) {
+        if (health <= 0) {
             //tempMain.loop = false;
 
             //Destroy(pS, 5);
@@ -95,6 +100,8 @@ public class EnemyController : MonoBehaviour {
         //enemy cannot move while attacking
         agent.enabled = !isAttacking;
 
+        fireCooldown -= Time.deltaTime;
+
         //if the player is far away then only update the nav dest every five seconds
         if (Vector3.Distance(player.transform.position, transform.position) >= minAccurateDist) {
             if (navUpdateTime <= 0f) {
@@ -125,12 +132,33 @@ public class EnemyController : MonoBehaviour {
 
             agro -= Time.fixedDeltaTime;
 
+            if (fireCooldown <= 0)
+            {
+                Shoot();
+            }
+
             return;
         }
 
         //if the enemy is neither targeting the player or far away then change the dest just before it reaches it's destination
         if (Vector3.Distance(transform.position, agent.destination) <= agent.stoppingDistance + 1)
             changeNavDest(player.transform.position, minAccurateDist - 1);
+    }
+
+    // shoot a bullet at the player
+    void Shoot()
+    {
+        Rigidbody bulletRb;
+        if (GameController.instance.useObjectPooling)
+        {
+            bulletRb = ObjectPooler.instance.SpawnFromPool("Bullet", projectilePos.transform.position, Quaternion.identity).GetComponent<Rigidbody>();
+        }
+        else
+        {
+            bulletRb = Instantiate(projectile, projectilePos.position, projectilePos.rotation, ObjectPooler.instance.transform).GetComponent<Rigidbody>();
+        }
+        bulletRb.AddForce(projectilePos.transform.forward * gunStrength, ForceMode.Impulse);
+        fireCooldown = fireInterval;
     }
 
     //changes the nav dest to the given posision and will offset the distance randomly if a max offset distance is given

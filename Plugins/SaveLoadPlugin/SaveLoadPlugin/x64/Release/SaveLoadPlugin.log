@@ -8,28 +8,10 @@ C:\Users\krftd\OneDrive\Documents\School\Game Engine Design\SaveLoadPlugin\SaveL
 C:\Users\krftd\OneDrive\Documents\School\Game Engine Design\SaveLoadPlugin\SaveLoadPlugin\GameObject.h(23,19): warning C4251: 'GameObject::types': class 'std::vector<int,std::allocator<int>>' needs to have dll-interface to be used by clients of class 'GameObject'
 C:\Users\krftd\OneDrive\Documents\School\Game Engine Design\SaveLoadPlugin\SaveLoadPlugin\GameObject.h(23): message : see declaration of 'std::vector<int,std::allocator<int>>'
 C:\Users\krftd\OneDrive\Documents\School\Game Engine Design\SaveLoadPlugin\SaveLoadPlugin\GameObject.cpp(52,25): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
-  Main.cpp
-C:\Users\krftd\OneDrive\Documents\School\Game Engine Design\SaveLoadPlugin\SaveLoadPlugin\GameObject.h(20,16): warning C4251: 'GameObject::saveFile': class 'std::basic_ofstream<char,std::char_traits<char>>' needs to have dll-interface to be used by clients of class 'GameObject'
-C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.33.31629\include\iosfwd(244): message : see declaration of 'std::basic_ofstream<char,std::char_traits<char>>'
-C:\Users\krftd\OneDrive\Documents\School\Game Engine Design\SaveLoadPlugin\SaveLoadPlugin\GameObject.h(21,16): warning C4251: 'GameObject::readFile': class 'std::basic_ifstream<char,std::char_traits<char>>' needs to have dll-interface to be used by clients of class 'GameObject'
-C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.33.31629\include\iosfwd(243): message : see declaration of 'std::basic_ifstream<char,std::char_traits<char>>'
-C:\Users\krftd\OneDrive\Documents\School\Game Engine Design\SaveLoadPlugin\SaveLoadPlugin\GameObject.h(22,24): warning C4251: 'GameObject::positions': class 'std::vector<Vector3D,std::allocator<Vector3D>>' needs to have dll-interface to be used by clients of class 'GameObject'
-C:\Users\krftd\OneDrive\Documents\School\Game Engine Design\SaveLoadPlugin\SaveLoadPlugin\GameObject.h(22): message : see declaration of 'std::vector<Vector3D,std::allocator<Vector3D>>'
-C:\Users\krftd\OneDrive\Documents\School\Game Engine Design\SaveLoadPlugin\SaveLoadPlugin\GameObject.h(23,19): warning C4251: 'GameObject::types': class 'std::vector<int,std::allocator<int>>' needs to have dll-interface to be used by clients of class 'GameObject'
-C:\Users\krftd\OneDrive\Documents\School\Game Engine Design\SaveLoadPlugin\SaveLoadPlugin\GameObject.h(23): message : see declaration of 'std::vector<int,std::allocator<int>>'
-  Wrapper.cpp
-C:\Users\krftd\OneDrive\Documents\School\Game Engine Design\SaveLoadPlugin\SaveLoadPlugin\GameObject.h(20,16): warning C4251: 'GameObject::saveFile': class 'std::basic_ofstream<char,std::char_traits<char>>' needs to have dll-interface to be used by clients of class 'GameObject'
-C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.33.31629\include\iosfwd(244): message : see declaration of 'std::basic_ofstream<char,std::char_traits<char>>'
-C:\Users\krftd\OneDrive\Documents\School\Game Engine Design\SaveLoadPlugin\SaveLoadPlugin\GameObject.h(21,16): warning C4251: 'GameObject::readFile': class 'std::basic_ifstream<char,std::char_traits<char>>' needs to have dll-interface to be used by clients of class 'GameObject'
-C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.33.31629\include\iosfwd(243): message : see declaration of 'std::basic_ifstream<char,std::char_traits<char>>'
-C:\Users\krftd\OneDrive\Documents\School\Game Engine Design\SaveLoadPlugin\SaveLoadPlugin\GameObject.h(22,24): warning C4251: 'GameObject::positions': class 'std::vector<Vector3D,std::allocator<Vector3D>>' needs to have dll-interface to be used by clients of class 'GameObject'
-C:\Users\krftd\OneDrive\Documents\School\Game Engine Design\SaveLoadPlugin\SaveLoadPlugin\GameObject.h(22): message : see declaration of 'std::vector<Vector3D,std::allocator<Vector3D>>'
-C:\Users\krftd\OneDrive\Documents\School\Game Engine Design\SaveLoadPlugin\SaveLoadPlugin\GameObject.h(23,19): warning C4251: 'GameObject::types': class 'std::vector<int,std::allocator<int>>' needs to have dll-interface to be used by clients of class 'GameObject'
-C:\Users\krftd\OneDrive\Documents\School\Game Engine Design\SaveLoadPlugin\SaveLoadPlugin\GameObject.h(23): message : see declaration of 'std::vector<int,std::allocator<int>>'
      Creating library C:\Users\krftd\OneDrive\Documents\School\Game Engine Design\SaveLoadPlugin\SaveLoadPlugin\x64\Release\SaveLoadPlugin.lib and object C:\Users\krftd\OneDrive\Documents\School\Game Engine Design\SaveLoadPlugin\SaveLoadPlugin\x64\Release\SaveLoadPlugin.exp
   Generating code
-  73 of 296 functions (24.7%) were compiled, the rest were copied from previous compilation.
-    60 functions were new in current compilation
-    29 functions had inline decision re-evaluated but remain unchanged
+  0 of 296 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   SaveLoadPlugin.vcxproj -> C:\Users\krftd\OneDrive\Documents\School\Game Engine Design\SaveLoadPlugin\SaveLoadPlugin\x64\Release\SaveLoadPlugin.dll

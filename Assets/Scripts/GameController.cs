@@ -11,6 +11,7 @@ public class GameController : MonoBehaviour {
     public bool gamePaused = false;
     public bool CursorLocked = false;
     public byte collectables = 0;
+    public bool useObjectPooling = true;
 
     private void OnEnable() {
         inputAction.Enable();

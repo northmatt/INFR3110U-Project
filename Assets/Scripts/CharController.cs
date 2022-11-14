@@ -9,9 +9,7 @@ public class CharController : MonoBehaviour {
     public float crouchSize = 0f;
     public float groundedDot = 0.7f;
     public float gravMult = 1f;
-
-    public GameObject projectile;
-    public Transform projectilePos;
+    public float health = 50f;
 
     private PlayerAction inputAction;
     private Rigidbody rBody;
@@ -121,5 +119,21 @@ public class CharController : MonoBehaviour {
 
         transform.localScale = new Vector3(1f, crouch ? crouchSize : 1f, 1f);
         transform.position -= new Vector3(0f, crouch ? coll.bounds.size.y * crouchSize * 0.5f : coll.bounds.size.y * crouchSize * -0.5f, 0f);
+    }
+
+    public void TakeDamage(float damage)
+    {
+        health -= damage;
+        if (health <= 0)
+        {
+            health = 0;
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        Debug.Log("The player would've died, so reset their health.");
+        health = 100;
     }
 }
