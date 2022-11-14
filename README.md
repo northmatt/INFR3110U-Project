@@ -1,11 +1,16 @@
 # INFR3110U-Project
 
-[Contributions PDF](Information/Contributions_Appendix.pdf),
-[Build](INFR3110U-Project.zip)
+Contribution PDF in [Main branch](../main/Information/Contributions_Appendix.pdf).
 
-Video Explaination:
+Build in [Main branch](../main/INFR3110U-Project.zip).
+
+Video Explaination 1:
 
 [![Video Explaination](http://img.youtube.com/vi/30ci0zeTQPg/0.jpg)](http://www.youtube.com/watch?v=30ci0zeTQPg "INFR3110U: Group Assignment 1")
+
+Video Explaination 2:
+
+[![Video Explaination](http://img.youtube.com/vi/QJi2bS-6Ipk/0.jpg)](http://www.youtube.com/watch?v=QJi2bS-6Ipk "INFR3110U: Group Assignment 2")
 
 Slidedeck of team members:
 
