@@ -1,8 +1,7 @@
 # INFR3110U-Project
- 
-Contribution PDF in [Kyle's branch](../Kyle/Group%20Assignment%201%20-%20F2022%20clarification.pdf).
 
-Build in [Main branch](../main/INFR3110U-Project.7z).
+[Contributions PDF](Information/Contributions_Appendix.pdf),
+[Build](INFR3110U-Project.zip)
 
 Video Explaination:
 
@@ -21,7 +20,7 @@ State Pattern UML:
 ![State Pattern UML](Information/StatePatternUML.png)
 
 Profiling of Object Pooling:
-------
+-----
 With:
 ![With Object Pooling](Information/ProfilerWithPooling.png)
 Without:
