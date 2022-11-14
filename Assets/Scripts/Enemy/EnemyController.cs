@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 //Created by MattN six years ago
 
-enum EnemyState {
+public enum EnemyStateNames {
     Wander,
     Chase,
     Attack,
@@ -16,22 +16,24 @@ public class EnemyController : MonoBehaviour {
     public float sightDistance;
     public float fieldOfView;
     public float agroTime;
+    public float soundSensitivty;
     public byte health;
     public AudioClip[] noises;
 
     private Animator enemyAnimator;
     private AudioSource enemyAudioSource;
-    private ParticleSystem enemyParticleSystem;
     private NavMeshAgent enemyNavAgent;
     private Transform enemyHead;
     private Transform player;
     private LayerMask enemyLayerIgnore;
+    private List<EnemyState> enemyStates = new List<EnemyState>();
     private EnemyState currentState;
-    private bool playerInSight;
-    private bool isMoving;
-    private bool isAttacking;
-    private float navUpdateTime;
-    private float currentAgroTime;
+    [HideInInspector] public bool playerInSight = false;
+    [HideInInspector] public bool isMoving = false;
+    [HideInInspector] public bool isAttacking = false;
+    [HideInInspector] public bool heardSound = false;
+    [HideInInspector] public float navUpdateTime = 0f;
+    [HideInInspector] public float currentAgroTime = 0f;
 
     private void Start() {
         enemyNavAgent = GetComponent<NavMeshAgent>();
@@ -45,9 +47,6 @@ public class EnemyController : MonoBehaviour {
         foreach (Transform child in children) {
             if (child.gameObject.name == "Head")
                 enemyHead = child;
-
-            if (child.gameObject.name == "Particle Effects")
-                enemyParticleSystem = child.GetComponent<ParticleSystem>();
         }
 
         Rigidbody[] rbs = transform.GetComponentsInChildren<Rigidbody>();
@@ -56,7 +55,12 @@ public class EnemyController : MonoBehaviour {
 
         player = GameController.instance.player.transform;
 
-        currentState = EnemyState.Wander;
+        enemyStates.Add(new EnemyStateWander(this, player, enemyNavAgent));
+        enemyStates.Add(new EnemyStateChase(this, player, enemyNavAgent));
+        enemyStates.Add(new EnemyStateAttack(this, player, enemyNavAgent, enemyAnimator));
+        enemyStates.Add(new EnemyStateDeath(this));
+
+        ChangeState(EnemyStateNames.Wander);
     }
 
     private void FixedUpdate() {
@@ -73,95 +77,37 @@ public class EnemyController : MonoBehaviour {
         enemyAnimator.SetBool("isWalking", isMoving);
         enemyAnimator.SetBool("isAttacking", false);
 
-        switch (currentState) {
-            case EnemyState.Wander:
-                RunWanderState();
+        heardSound = false;
+
+        currentState.UpdateState();
+    }
+
+    public void ChangeState(EnemyStateNames state) {
+        if (currentState != null)
+            currentState.ExitState();
+
+        switch (state) {
+            case EnemyStateNames.Wander:
+                currentState = enemyStates[0];
                 break;
-            case EnemyState.Chase:
-                RunChaseState();
+            case EnemyStateNames.Chase:
+                currentState = enemyStates[1];
                 break;
-            case EnemyState.Attack:
-                RunAttackState();
+            case EnemyStateNames.Attack:
+                currentState = enemyStates[2];
                 break;
-            case EnemyState.Death:
-                RunDeathState();
+            case EnemyStateNames.Death:
+                currentState = enemyStates[3];
                 break;
             default:
                 break;
         }
+
+        currentState.EnterState();
     }
 
-    private void RunWanderState() {
-        if (currentAgroTime > 0f) {
-            currentState = EnemyState.Chase;
-            return;
-        }
-
-        //if enemy is outside the wander range then only update the nav dest every five seconds
-        if (Vector3.Distance(player.position, transform.position) >= wanderRange) {
-            if (navUpdateTime <= 0f) {
-                changeNavDest(player.position, wanderRange - 1f);
-                navUpdateTime = 5f;
-            }
-
-            navUpdateTime -= Time.fixedDeltaTime;
-
-            return;
-        }
-
-        //change the dest just before it reaches it's destination
-        if (Vector3.Distance(transform.position, enemyNavAgent.destination) <= enemyNavAgent.stoppingDistance + 1f)
-            changeNavDest(player.position, wanderRange - 1f);
-    }
-
-    private void RunChaseState() {
-        //if the enemy is targeting a player then go directly to it's position
-
-        if (!playerInSight)
-            currentAgroTime -= Time.fixedDeltaTime;
-
-        if (currentAgroTime <= 0f) {
-            currentAgroTime = 0f;
-            currentState = EnemyState.Wander;
-
-            return;
-        }
-
-
-        if (Vector3.Distance(transform.position, player.transform.position) <= enemyNavAgent.stoppingDistance && playerInSight || isAttacking) {
-            currentState = EnemyState.Attack;
-
-            return;
-        }
-
-        changeNavDest(player.transform.position);
-    }
-
-    private void RunAttackState() {
-        isAttacking = enemyAnimator.GetCurrentAnimatorStateInfo(0).IsName("EnemyAttack");
-
-        //enemy cannot move while attacking
-        enemyNavAgent.enabled = !isAttacking;
-
-        //Change to maxAttackRange?
-        if (!isAttacking && (!playerInSight || Vector3.Distance(transform.position, player.transform.position) >= enemyNavAgent.stoppingDistance)) {
-            currentState = EnemyState.Chase;
-
-            return;
-        }
-
-        if (!isAttacking)
-            enemyAnimator.SetBool("isAttacking", true);
-
-        //consider moving code so that enemy cant change direction during attack animation, prolly too OP
-        //consider using Chase state for changing directions with above in mind, also smoothed rotation
-        Vector3 tempVector = player.transform.position - transform.position;
-        tempVector.y = 0;
-        transform.rotation = Quaternion.LookRotation(tempVector);
-    }
-
-    private void RunDeathState() {
-        //If enemy has died then remove unneeded components and turn the enmy into a ragdoll
+    public void EnemyDeath() {
+        //If enemy has died then remove unneeded components and turn the enemy into a ragdoll
 
         //ParticleSystem.MainModule tempMain = enemyParticleSystem.main;
         //tempMain.loop = false;
@@ -179,7 +125,7 @@ public class EnemyController : MonoBehaviour {
     }
 
     //changes the nav dest to the given posision and will offset the distance randomly if a max offset distance is given
-    private void changeNavDest(Vector3 pos, float offsetDist = 0f) {
+    public void changeNavDest(Vector3 pos, float offsetDist = 0f) {
         if (enemyAnimator.GetCurrentAnimatorStateInfo(0).IsName("EnemyAttack"))
             return;
 
@@ -243,5 +189,21 @@ public class EnemyController : MonoBehaviour {
         //move picked sound to index 0 so it's not picked next time
         noises[n] = noises[0];
         noises[0] = enemyAudioSource.clip;
+    }
+
+    public void OnNotify(Vector3 soundPosition, float soundDB) {
+        //Stop infinite recursion
+        if (heardSound)
+            return;
+
+        float soundLevel = soundDB * Mathf.Pow(2f / Vector3.Distance(transform.position, soundPosition), 2f);
+        if (soundLevel < soundSensitivty)
+            return;
+
+        heardSound = true;
+        currentAgroTime = agroTime;
+
+        //Notify nearby enemies
+        StealthController.instance.NotifyAll(transform.position, 10f);
     }
 }

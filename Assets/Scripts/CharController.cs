@@ -9,6 +9,7 @@ public class CharController : MonoBehaviour {
     public float crouchSize = 0f;
     public float groundedDot = 0.7f;
     public float gravMult = 1f;
+    public AudioClip[] noises;
 
     public GameObject projectile;
     public Transform projectilePos;
@@ -17,6 +18,7 @@ public class CharController : MonoBehaviour {
     //private PlayerInput playerInput;
 
     private PlayerAction inputAction;
+    private AudioSource audioSource;
     private Rigidbody rBody;
     private Collider coll;
     private List<GameObject> groundedObjects = new List<GameObject>();
@@ -46,6 +48,7 @@ public class CharController : MonoBehaviour {
 
         rBody = GetComponent<Rigidbody>();
         coll = GetComponent<Collider>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void FixedUpdate() {
@@ -66,6 +69,12 @@ public class CharController : MonoBehaviour {
         //Add downwards force if ungrounded (RB3D has drag)
         if (!grounded)
             rBody.AddForce(Physics.gravity * gravMult, ForceMode.Acceleration);
+
+        if (!audioSource.isPlaying && (Mathf.Abs(rBody.velocity.x) > 0.1f || Mathf.Abs(rBody.velocity.z) > 0.1f))
+           PlayNoise();
+
+        if (audioSource.isPlaying)
+            OutputNoiseToStealthController();
     }
 
     private void OnCollisionEnter(Collision collision) {
@@ -128,4 +137,33 @@ public class CharController : MonoBehaviour {
         transform.localScale = new Vector3(1f, crouch ? crouchSize : 1f, 1f);
         transform.position -= new Vector3(0f, crouch ? coll.bounds.size.y * crouchSize * 0.5f : coll.bounds.size.y * crouchSize * -0.5f, 0f);
     }
+
+    private void PlayNoise() {
+        if (noises.Length == 0)
+            return;
+
+        int n = crouch ? 0 : (sprint ? 2 : 1);
+        audioSource.clip = noises[n];
+        audioSource.PlayOneShot(audioSource.clip);
+    }
+
+    private void OutputNoiseToStealthController() {
+        if (audioSource.clip == null)
+            return;
+
+        switch (audioSource.clip.name) {
+            case "Step Quiet":
+                StealthController.instance.NotifyAll(transform.position, 1f);
+                break;
+            case "Step Normal":
+                StealthController.instance.NotifyAll(transform.position, 30f);
+                break;
+            case "Step Loud":
+                StealthController.instance.NotifyAll(transform.position, 80f);
+                break;
+            default:
+                break;
+        }
+    }
+
 }
