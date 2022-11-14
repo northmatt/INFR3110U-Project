@@ -5,10 +5,12 @@ using System.Runtime.InteropServices;
 
 public class SaveLoadPlugin : MonoBehaviour
 {
+    public bool savePlayerPositionOnQuit;
+
     [DllImport("SaveLoadPlugin")]
     private static extern void StartSaving(string fileName);
     [DllImport("SaveLoadPlugin")]
-    private static extern void WritePosition(Vector3 position);
+    private static extern void WritePosition(int type, Vector3 position);
     [DllImport("SaveLoadPlugin")]
     private static extern void EndSaving();
 
@@ -17,8 +19,11 @@ public class SaveLoadPlugin : MonoBehaviour
     [DllImport("SaveLoadPlugin")]
     private static extern Vector3 GetNthPosition(int n);
     [DllImport("SaveLoadPlugin")]
+    private static extern int GetNthType(int n);
+    [DllImport("SaveLoadPlugin")]
     private static extern int GetLength();
 
+    private Transform player;
     private PlayerAction playerInput;
     private string mPath, fn;
 
@@ -26,30 +31,66 @@ public class SaveLoadPlugin : MonoBehaviour
     void Start()
     {
         playerInput = GameController.instance.inputAction;
-        playerInput.Editor.Save.performed += cntxt => SaveEnemies();
-        playerInput.Editor.Load.performed += cntxt => LoadEnemies();
+        player = GameController.instance.player.transform;
 
         mPath = Application.dataPath;
         fn = mPath + "/save.txt";
         Debug.Log(fn);
+        
+        LoadPlayerPosition();
+    }
+
+    void OnApplicationQuit()
+    {
+        StartSaving(fn);
+        if (savePlayerPositionOnQuit)
+        {
+            WritePosition(0, player.position);
+            Debug.Log("Saved player to " + player.position);
+        }
+        // SaveEnemies();
+        EndSaving();
+    }
+
+    void LoadPlayerPosition()
+    {
+        ReadData(fn);
+        if (GetLength() <= 0 || GetNthType(0) != 0)
+        {
+            Debug.Log("Player's location not stored");
+        }
+        else
+        {
+            player.transform.position = GetNthPosition(0);
+            Debug.Log("Loaded player to " + player.transform.position);
+        }
     }
 
     void SaveEnemies()
     {
-        StartSaving(fn);
         foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Enemy"))
         {
-            WritePosition(obj.transform.position);
+            if (obj.name.Contains("Enemy 1"))
+            {
+                WritePosition(1, obj.transform.position);
+            }
+            else if (obj.name.Contains("Enemy 2"))
+            {
+                WritePosition(2, obj.transform.position);
+            }
+            else
+            {
+                WritePosition(0, obj.transform.position);
+            }
         }
-        EndSaving();
     }
-
+    
     void LoadEnemies()
     {
         ReadData(fn);
         for (int i = 0; i < GetLength(); i++)
         {
-            Debug.Log(GetNthPosition(i));
+            Debug.Log("Enemy type " + GetNthType(i) + " at " + GetNthPosition(i));
         }
     }
 }

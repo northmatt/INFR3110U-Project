@@ -9,13 +9,8 @@ public class CharController : MonoBehaviour {
     public float crouchSize = 0f;
     public float groundedDot = 0.7f;
     public float gravMult = 1f;
+    public float health = 50f;
     public AudioClip[] noises;
-
-    public GameObject projectile;
-    public Transform projectilePos;
-
-    //added for dynamic rebinding
-    //private PlayerInput playerInput;
 
     private PlayerAction inputAction;
     private AudioSource audioSource;
@@ -136,6 +131,22 @@ public class CharController : MonoBehaviour {
 
         transform.localScale = new Vector3(1f, crouch ? crouchSize : 1f, 1f);
         transform.position -= new Vector3(0f, crouch ? coll.bounds.size.y * crouchSize * 0.5f : coll.bounds.size.y * crouchSize * -0.5f, 0f);
+    }
+
+    public void TakeDamage(float damage)
+    {
+        health -= damage;
+        if (health <= 0)
+        {
+            health = 0;
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        Debug.Log("The player would've died, so reset their health.");
+        health = 100;
     }
 
     private void PlayNoise() {
