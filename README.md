@@ -1,17 +1,32 @@
 # INFR3110U-Project
- 
-Contribution PDF in [Kyle's branch](../Kyle/Group%20Assignment%201%20-%20F2022%20clarification.pdf).
 
-Build in [Main branch](../main/INFR3110U-Project.7z).
+Contribution PDF in [Main branch](../main/Information/Contributions_Appendix.pdf).
 
-Video Explaination:
+Build in [Main branch](../main/INFR3110U-Project.zip).
+
+Video Explaination 1:
 
 [![Video Explaination](http://img.youtube.com/vi/30ci0zeTQPg/0.jpg)](http://www.youtube.com/watch?v=30ci0zeTQPg "INFR3110U: Group Assignment 1")
 
-Slidedeck:
+Video Explaination 2:
 
-![Slidedeck](../Kyle/Slidedeck.png)
+[![Video Explaination](http://img.youtube.com/vi/QJi2bS-6Ipk/0.jpg)](http://www.youtube.com/watch?v=QJi2bS-6Ipk "INFR3110U: Group Assignment 2")
+
+Slidedeck of team members:
+
+![Slidedeck](Information/TeamMembers.png)
 
 Command Pattern UML:
 
-![Command Pattern UML](../Kyle/CommandPattern.png)
+![Command Pattern UML](Information/CommandPattern.png)
+
+State Pattern UML:
+
+![State Pattern UML](Information/StatePatternUML.png)
+
+Profiling of Object Pooling:
+-----
+With:
+![With Object Pooling](Information/ProfilerWithPooling.png)
+Without:
+![Without Object Pooling](Information/ProfilerWithoutPooling.png)

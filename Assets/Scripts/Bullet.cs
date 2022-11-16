@@ -8,7 +8,7 @@ public class Bullet : MonoBehaviour
 
     public float damage = 1;
 
-    private void Start()
+    private void Awake()
     {
         player = GameController.instance.player.GetComponent<CharController>();
     }

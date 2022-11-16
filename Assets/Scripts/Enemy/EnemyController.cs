@@ -207,12 +207,12 @@ public class EnemyController : MonoBehaviour {
     public void Shoot() {
         Rigidbody bulletRb;
         if (GameController.instance.useObjectPooling) {
-            bulletRb = ObjectPooler.instance.SpawnFromPool("Bullet", projectilePos.transform.position, Quaternion.identity).GetComponent<Rigidbody>();
+            bulletRb = ObjectPooler.instance.SpawnFromPool("Bullet", projectilePos.position, projectilePos.rotation).GetComponent<Rigidbody>();
         }
         else {
             bulletRb = Instantiate(projectile, projectilePos.position, projectilePos.rotation, ObjectPooler.instance.transform).GetComponent<Rigidbody>();
         }
-        bulletRb.AddForce(projectilePos.transform.forward * gunStrength, ForceMode.Impulse);
+        bulletRb.AddForce(projectilePos.forward * gunStrength, ForceMode.Impulse);
         fireCooldown = fireInterval;
     }
 
