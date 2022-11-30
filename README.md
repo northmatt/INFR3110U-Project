@@ -2,7 +2,7 @@
 
 Contribution PDF in [Main branch](../main/Information/Contributions_Appendix.pdf).
 
-Build in [Main branch](../main/INFR3110U-Project.zip).
+Build in [Main branch](../main/Information/INFR3110U-Project.zip).
 
 Video Explaination 1:
 
@@ -14,19 +14,19 @@ Video Explaination 2:
 
 Slidedeck of team members:
 
-![Slidedeck](Information/TeamMembers.png)
+![Slidedeck](../main/Information/TeamMembers.png)
 
 Command Pattern UML:
 
-![Command Pattern UML](Information/CommandPattern.png)
+![Command Pattern UML](../main/Information/CommandPattern.png)
 
 State Pattern UML:
 
-![State Pattern UML](Information/StatePatternUML.png)
+![State Pattern UML](../main/Information/StatePatternUML.png)
 
 Profiling of Object Pooling:
 -----
 With:
-![With Object Pooling](Information/ProfilerWithPooling.png)
+![With Object Pooling](../main/Information/ProfilerWithPooling.png)
 Without:
-![Without Object Pooling](Information/ProfilerWithoutPooling.png)
+![Without Object Pooling](../main/Information/ProfilerWithoutPooling.png)
