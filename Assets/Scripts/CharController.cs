@@ -121,7 +121,7 @@ public class CharController : MonoBehaviour {
     }
 
     //Should prolly have an FSM at this point, crouchSize should be done by anim
-    private void ToggleCrouch() {
+    public void ToggleCrouch(bool noPositionChange = false) {
         Vector3 startCheck = transform.position - (coll.bounds.extents.y - coll.bounds.extents.z - 0.02f) * Vector3.up;
         Vector3 endCheck = transform.position + (coll.bounds.size.y / crouchSize - coll.bounds.size.z) * Vector3.up;
         if (crouch && Physics.CheckCapsule(startCheck, endCheck, coll.bounds.extents.z, ~(1 << LayerMask.NameToLayer("Player")), QueryTriggerInteraction.Ignore))
@@ -130,7 +130,12 @@ public class CharController : MonoBehaviour {
         crouch = !crouch;
 
         transform.localScale = new Vector3(1f, crouch ? crouchSize : 1f, 1f);
-        transform.position -= new Vector3(0f, crouch ? coll.bounds.size.y * crouchSize * 0.5f : coll.bounds.size.y * crouchSize * -0.5f, 0f);
+        if (!noPositionChange)
+            transform.position -= new Vector3(0f, crouch ? coll.bounds.size.y * crouchSize * 0.5f : coll.bounds.size.y * crouchSize * -0.5f, 0f);
+    }
+
+    public bool GetCrouch() {
+        return crouch;
     }
 
     public void TakeDamage(float damage)

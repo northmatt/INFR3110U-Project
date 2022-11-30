@@ -6,6 +6,7 @@ public class PlaceItemCommand : ICommand {
     GameObject objectReference;
     GameObject prefabReference;
     Vector3 position;
+    Quaternion rotation;
 
     public PlaceItemCommand(GameObject _prefabReference) {
         this.prefabReference = _prefabReference;
@@ -17,10 +18,11 @@ public class PlaceItemCommand : ICommand {
 
     public void Undo() {
         this.position = objectReference.transform.position;
+        this.rotation = objectReference.transform.rotation;
         ItemPlacer.RemoveItem(objectReference);
     }
 
     public void Redo() {
-        objectReference = ItemPlacer.PlaceItem(prefabReference, position);
+        objectReference = ItemPlacer.PlaceItem(prefabReference, position, rotation);
     }
 }

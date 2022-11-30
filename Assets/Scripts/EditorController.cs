@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class EditorController : MonoBehaviour {
     public static EditorController instance;
@@ -12,12 +13,14 @@ public class EditorController : MonoBehaviour {
     public Camera editorCam;
     public GameObject[] editorPrefabs;
     public Transform instantiateParent = null;
-    public GameObject instantiatedPrefab = null;
-    public bool editorMode = false;
+    [HideInInspector] public GameObject instantiatedPrefab = null;
+    [HideInInspector] public bool editorMode = false;
     public float editorMovement = 0f;
+    [HideInInspector] public Subject observers = new Subject();
 
     private Vector3 mousePos = Vector3.zero;
-    [HideInInspector] public Subject observers = new Subject();
+    [SerializeField] private GameObject instantiatedButtonPanelPrefab;
+    [SerializeField] private Transform instantiatedPanelArray;
 
     // Start is called before the first frame update
     void Start() {
@@ -32,12 +35,16 @@ public class EditorController : MonoBehaviour {
 
         inputAction.Player.EditorMode.performed += cntxt => ToggleEditorMode();
         inputAction.Editor.EditorMode.performed += cntxt => ToggleEditorMode();
-        inputAction.Editor.AddItem1.performed += cntxt => AddItem(0);
-        inputAction.Editor.AddItem2.performed += cntxt => AddItem(1);
+        //inputAction.Editor.AddItem1.performed += cntxt => AddItem(0);
+        //inputAction.Editor.AddItem2.performed += cntxt => AddItem(1);
         inputAction.Editor.DropItem.performed += cntxt => DropItem();
 
         mainCam.enabled = true;
         editorCam.enabled = false;
+
+        for (int i = 0; i < editorPrefabs.Length; ++i) {
+            InstantiateButtonPrefab(i);
+        }
     }
 
     // Update is called once per frame
@@ -79,7 +86,7 @@ public class EditorController : MonoBehaviour {
             inputAction.Player.Enable();
         }
 
-        //GameController.instance.editorUI.enabled = editorMode;
+        GameController.instance.editorUI.enabled = editorMode;
         GameController.instance.DoPause(editorMode);
     }
 
@@ -93,12 +100,25 @@ public class EditorController : MonoBehaviour {
         if (!editorMode || instantiatedPrefab == null)
             return;
 
-        if (Random.value > 0.5f)
+        /*if (Random.value > 0.5f)
             observers.AddObserver(new InstantiatedObject1(instantiatedPrefab, new InstantiatedObjectEvent1()));
         else
-            observers.AddObserver(new InstantiatedObject1(instantiatedPrefab, new InstantiatedObjectEvent2()));
+            observers.AddObserver(new InstantiatedObject1(instantiatedPrefab, new InstantiatedObjectEvent2()));*/
 
         instantiatedPrefab = null;
     }
 
+    public void InstantiateButtonPrefab(int targetIndex) {
+        GameObject panelObject = Instantiate(instantiatedButtonPanelPrefab, instantiatedPanelArray);
+
+        Text panelText = panelObject.transform.GetChild(0).GetComponent<Text>();
+        Button instantiateButton = panelObject.transform.GetChild(1).GetComponent<Button>();
+        //Text instantiateButtonText = instantiateButton.transform.GetChild(0).GetComponent<Text>();
+        //Button deleteButton = panelObject.transform.GetChild(2).GetComponent<Button>();
+
+        panelText.text = editorPrefabs[targetIndex].name + ":";
+
+        instantiateButton.onClick.AddListener(delegate { AddItem(targetIndex); });
+        //deleteButton.onClick.AddListener(delegate { ResetBinding(affectedInputAction, bindingIndex, instantiateButtonText); });
+    }
 }

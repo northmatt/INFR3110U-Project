@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 public class SaveLoadPlugin : MonoBehaviour
 {
     public bool savePlayerPositionOnQuit;
+    public bool savePlayerStatsOnQuit;
 
     [DllImport("SaveLoadPlugin")]
     private static extern void StartSaving(string fileName);
@@ -24,45 +25,45 @@ public class SaveLoadPlugin : MonoBehaviour
     private static extern int GetLength();
 
     private Transform player;
-    private PlayerAction playerInput;
     private string mPath, fn;
 
     // Start is called before the first frame update
-    void Start()
-    {
-        playerInput = GameController.instance.inputAction;
+    void Start() {
         player = GameController.instance.player.transform;
 
         mPath = Application.dataPath;
         fn = mPath + "/save.txt";
-        Debug.Log(fn);
         
-        LoadPlayerPosition();
+        LoadPlayerData();
     }
 
-    void OnApplicationQuit()
-    {
+    void OnApplicationQuit() {
         StartSaving(fn);
+
         if (savePlayerPositionOnQuit)
-        {
             WritePosition(0, player.position);
-            Debug.Log("Saved player to " + player.position);
-        }
+
+        if (savePlayerStatsOnQuit)
+            WritePosition(1, new Vector3(GameController.instance.player.health, 0f, GameController.instance.player.GetCrouch() ? 1f : 0f));
+
         // SaveEnemies();
         EndSaving();
     }
 
-    void LoadPlayerPosition()
+    void LoadPlayerData()
     {
         ReadData(fn);
-        if (GetLength() <= 0 || GetNthType(0) != 0)
-        {
-            Debug.Log("Player's location not stored");
-        }
-        else
-        {
+        if (GetLength() <= 0)
+            return;
+
+        if (GetNthType(0) == 0)
             player.transform.position = GetNthPosition(0);
-            Debug.Log("Loaded player to " + player.transform.position);
+
+        if (GetNthType(1) == 1) {
+            GameController.instance.player.health = GetNthPosition(1).x;
+
+            if (GetNthPosition(1).z == 1f)
+                GameController.instance.player.ToggleCrouch(true);
         }
     }
 
