@@ -12,8 +12,8 @@ public class CommandInvoker : MonoBehaviour {
     private void Start() {
         inputAction = GameController.instance.inputAction;
 
-        inputAction.Editor.Undo.performed += cntxt => UndoCommand();
-        inputAction.Editor.Redo.performed += cntxt => RedoCommand();
+        //inputAction.Editor.Undo.performed += cntxt => UndoCommand();
+        //inputAction.Editor.Redo.performed += cntxt => RedoCommand();
     }
 
     private void Update() {
