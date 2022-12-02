@@ -23,13 +23,21 @@ Video Explaination 2:
 
 [![Video Explaination](http://img.youtube.com/vi/QJi2bS-6Ipk/0.jpg)](http://www.youtube.com/watch?v=QJi2bS-6Ipk "INFR3110U: Group Assignment 2")
 
+Video Explaination 3:
+
+[![Video Explaination](http://img.youtube.com/vi/tUht5yOEBCk/0.jpg)](http://www.youtube.com/watch?v=tUht5yOEBCk "INFR3110U: Group Assignment 3")
+
 Slidedeck of team members:
 
-![Slidedeck](../main/Information/TeamMembers.png)
+![Slidedeck](../main/Information/TeamMembers2.png)
 
 Trello Project Manager:
 
 ![Project Management](../main/Information/ProjectManagement.png)
+
+Peer Review Data:
+
+![Project Management](../main/Information/PeerReviewData.png)
 
 Command Pattern UML (Assignment 1):
 
@@ -39,13 +47,13 @@ State Pattern UML (Assignment 2):
 
 ![State Pattern UML](../main/Information/StatePatternUML.png)
 
-State Pattern Flowchart (Assignment 3):
+State Pattern UML (Assignment 3):
 
-![State Pattern Flowchart](../main/Information/StatePatternUML.png)
+![State Pattern Flowchart](../main/Information/StatePatternUML2.png)
 
 Input Manager Flowchart (Assignment 3):
 
-![Input Manager Flowchart](../main/Information/StatePatternUML.png)
+![Input Manager Flowchart](../main/Information/RebindManagerFlowchart.png)
 
 Save/Load Plugin Flowchart (Assignment 3):
 
